@@ -14,8 +14,8 @@ namespace AITestProject.AI.Data
         public static IEnumerable<ImageData> ReadFromFile(string imageFolder)
         {
             return Directory
-                   .GetFiles(imageFolder)
-                   .Where(filePath => Path.GetExtension(filePath) != ".md")
+                   .GetFiles(imageFolder, "*.*", SearchOption.AllDirectories)
+                   .Where(filePath => Path.GetExtension(filePath) == ".jpg")
                    .Select(filePath => new ImageData {ImagePath = filePath, Label = Path.GetFileName(filePath)});
         }
     }

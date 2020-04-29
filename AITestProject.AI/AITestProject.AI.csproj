@@ -14,5 +14,13 @@
       <PackageReference Include="Microsoft.ML.TensorFlow.Redist" Version="0.14.0" />
       <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.1.0" />
     </ItemGroup>
+    <ItemGroup>
+        <None Include="$(SolutionDir)assets\LFW\**"
+              CopyToOutputDirectory="PreserveNewest"
+              LinkBase="assets\LFW" />
+<!--        <Content Include="..\assets\LFW\*\*.*">-->
+<!--            <CopyToOutputDirectory >PreserveNewest</CopyToOutputDirectory>-->
+<!--        </Content>-->
+    </ItemGroup>
 
 </Project>
