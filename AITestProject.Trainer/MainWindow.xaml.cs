@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AITestProject.AI.Data;
 
 namespace AITestProject.Trainer
 {
@@ -21,21 +22,37 @@ namespace AITestProject.Trainer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly IEnumerator<ImageData> _enumerable;
+
         public MainWindow()
         {
             InitializeComponent();
-            Pic.Source = new BitmapImage(new Uri(Directory.GetCurrentDirectory() + @"\assets\lfw\Aaron_Eckhart\Aaron_Eckhart_0001.jpg"));
-        }
-
-        private void Image_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            // throw new NotImplementedException();
+            _enumerable = ImageData.ReadFromFile(Directory.GetCurrentDirectory() + @"\assets\LFW\").GetEnumerator();
+            Pic.Source = NextImage();
         }
 
         private void Image_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var p = e.GetPosition((Image) sender);
-            Console.WriteLine(p.X + " " + p.Y);
+            Console.WriteLine("X: {0}, Y: {1}", (int) p.X, (int) p.Y);
+            Pic.Source = NextImage();
+        }
+
+        private void Window_OnClosed(object? sender, EventArgs e)
+        {
+            _enumerable.Dispose();
+            Environment.Exit(Environment.ExitCode);
+        }
+
+        private BitmapImage NextImage()
+        {
+            if (!_enumerable.MoveNext()) throw new ArgumentException($"This was the Last element.");
+            return new BitmapImage(
+                new Uri(
+                    (_enumerable.Current ?? throw new ArgumentException($"no pic found {_enumerable.Current}"))
+                    .ImagePath
+                )
+            );
         }
     }
 }

@@ -44,30 +44,5 @@ namespace AITestProject.AI
                 Console.ReadLine();
             }
         }
-
-        private static ITransformer Train(MLContext mlContext, string trainDataPath)
-        {
-            var pipelineForTripTime = mlContext.Transforms.CopyColumns("Label", "LeftEyeArea")
-                                               .Append(mlContext.Regression.Trainers.FastTree())
-                                               .Append(mlContext.Transforms.CopyColumns(outputcolumn: "tripTime", inputcolumn: "Score"));
-
-            var pipelineForFareAmount = mlContext.Transforms.CopyColumns("Label", "FareAmount")
-                                                 .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId"))
-                                                 .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode"))
-                                                 .Append(
-                                                     mlContext.Transforms.Categorical.OneHotEncoding("PaymentType"))
-                                                 .Append(mlContext.Transforms.Concatenate("Features", "VendorId",
-                                                                                          "RateCode", "PassengerCount",
-                                                                                          "TripDistance",
-                                                                                          "PaymentType"))
-                                                 .Append(mlContext.Regression.Trainers.FastTree())
-                                                 .Append(mlContext.Transforms.CopyColumns(outputcolumn: "fareAmount",
-                                                                                          inputcolumn: "Score"));
-
-
-            var model = pipelineForTripTime.Append(pipelineForFareAmount).Fit(dataView);
-            SaveModelAsFile(mlContext, model);
-            return model;
-        }
     }
 }
