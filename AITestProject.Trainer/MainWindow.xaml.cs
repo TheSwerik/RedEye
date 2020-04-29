@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AITestProject.AI;
 using AITestProject.AI.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
@@ -97,7 +98,7 @@ namespace AITestProject.Trainer
         }
 
         // UI:
-        private void Button_OnClick(object sender, RoutedEventArgs e)
+        private void OutPutDialog_OnClick(object sender, RoutedEventArgs e)
         {
             var dialog = new CommonSaveFileDialog
                          {
@@ -120,6 +121,12 @@ namespace AITestProject.Trainer
             _enumerable.Dispose();
             _writer.Dispose();
             Environment.Exit(Environment.ExitCode);
+        }
+
+        private void Start_OnClick(object sender, RoutedEventArgs e)
+        {
+            _writer.Dispose();
+            var trainer = new Training();
         }
     }
 }

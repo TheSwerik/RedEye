@@ -19,29 +19,21 @@ namespace AITestProject.AI
         {
             _mlContext = new MLContext(7);
             _assets = new DirectoryInfo(Directory.GetCurrentDirectory() + @"\assets\LFW\");
-            Console.WriteLine("Found {0} Images.", ImageData.ReadDataFromFile(_assets.FullName).Count());
+            Console.WriteLine("Found {0} Images. {1} of them have data.",
+                              ImageData.ReadImagesFromFile(_assets.FullName).Count(),
+                              ImageData.ReadDataFromFile(Directory.GetCurrentDirectory()).Count());
             Start();
         }
 
         private void Start()
         {
-            var configurationDetector = new ConfigurationDetector();
-            var config = configurationDetector.Detect();
-            var yolo = new YoloWrapper(config);
-            Detect(yolo);
-        }
-
-        private void Detect(YoloWrapper yolo)
-        {
-            foreach (var image in ImageData.ReadDataFromFile(_assets.FullName))
+            foreach (var image in ImageData.ReadDataFromFile(Directory.GetCurrentDirectory()))
             {
-                Console.WriteLine(Environment.NewLine + Path.GetFileName(image.ImagePath));
-                foreach (var item in yolo.Detect(image.ImagePath))
-                {
-                    Console.WriteLine(item.Type);
-                }
-
-                Console.ReadLine();
+                Console.WriteLine(
+                    $"{Path.GetFileName(image.ImagePath)}:\t" +
+                    $"Left Eye: {string.Join(", ", image.LeftEyeCoordinate)}\t" +
+                    $"Right Eye: {string.Join(", ", image.RightEyeCoordinate)}"
+                );
             }
         }
     }
