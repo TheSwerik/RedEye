@@ -19,7 +19,7 @@ namespace AITestProject.AI
         {
             _mlContext = new MLContext(7);
             _assets = new DirectoryInfo(Directory.GetCurrentDirectory() + @"\assets\LFW\");
-            Console.WriteLine("Found {0} Images.", ImageData.ReadFromFile(_assets.FullName).Count());
+            Console.WriteLine("Found {0} Images.", ImageData.ReadDataFromFile(_assets.FullName).Count());
             Start();
         }
 
@@ -33,7 +33,7 @@ namespace AITestProject.AI
 
         private void Detect(YoloWrapper yolo)
         {
-            foreach (var image in ImageData.ReadFromFile(_assets.FullName))
+            foreach (var image in ImageData.ReadDataFromFile(_assets.FullName))
             {
                 Console.WriteLine(Environment.NewLine + Path.GetFileName(image.ImagePath));
                 foreach (var item in yolo.Detect(image.ImagePath))
