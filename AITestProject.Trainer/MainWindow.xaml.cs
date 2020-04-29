@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AITestProject.AI.Data;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace AITestProject.Trainer
 {
@@ -23,25 +24,26 @@ namespace AITestProject.Trainer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IEnumerator<string> _enumerable;
+        private IEnumerator<string> _enumerable;
         private bool _leftEyeFound;
-        private readonly StreamWriter _writer;
-        private string _dataFilePath;
+        private StreamWriter _writer;
 
         public MainWindow()
         {
             InitializeComponent();
-
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            DataPathBox.Text = Directory.GetCurrentDirectory() + @"\assets\ImageData.tsv";
+        }
 
+        private void Init(object sender, TextChangedEventArgs textChangedEventArgs)
+        {
             // File Stuff:
-            _dataFilePath = Directory.GetCurrentDirectory() + @"\assets\ImageData.tsv";
-
             var lines = 0;
-            if (!File.Exists(_dataFilePath)) File.Create(_dataFilePath).Close();
-            else lines = File.ReadLines(_dataFilePath).Count();
+            if (!File.Exists(DataPathBox.Text)) File.Create(DataPathBox.Text).Close();
+            else lines = File.ReadLines(DataPathBox.Text).Count();
 
-            _writer = new StreamWriter(new FileStream(_dataFilePath, FileMode.Append));
+            _writer?.Dispose();
+            _writer = new StreamWriter(new FileStream(DataPathBox.Text, FileMode.Append));
 
             // init:
             _enumerable = ImageData.ReadImagesFromFile(Directory.GetCurrentDirectory() + @"\assets\LFW\")
@@ -51,7 +53,7 @@ namespace AITestProject.Trainer
             _leftEyeFound = false;
         }
 
-        private void Image_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void Image_OnClick(object sender, MouseButtonEventArgs e)
         {
             var point = e.GetPosition((Image) sender);
 
@@ -72,13 +74,7 @@ namespace AITestProject.Trainer
             Console.WriteLine("X: {0}, Y: {1}", (int) point.X, (int) point.Y);
         }
 
-        private void Window_OnClosed(object sender, EventArgs e)
-        {
-            _enumerable.Dispose();
-            _writer.Dispose();
-            Environment.Exit(Environment.ExitCode);
-        }
-
+        // Helper Methods:
         private BitmapImage NextImage()
         {
             if (!_enumerable.MoveNext()) throw new ArgumentException("This was the Last element.");
@@ -98,6 +94,32 @@ namespace AITestProject.Trainer
                 _writer.WriteLine(", " + (int) p.X + ", " + (int) p.Y);
                 _writer.Flush();
             }
+        }
+
+        // UI:
+        private void Button_OnClick(object sender, RoutedEventArgs e)
+        {
+            var dialog = new CommonSaveFileDialog
+                         {
+                             Title = "Select Output File",
+                             DefaultFileName = "ImageData",
+                             DefaultExtension = "tsv",
+                             OverwritePrompt = false,
+                             Filters = {new CommonFileDialogFilter("TSV-File", ".tsv")},
+                             AlwaysAppendDefaultExtension = true,
+                             DefaultDirectory = DataPathBox.Text,
+                             InitialDirectory = DataPathBox.Text
+                         };
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok) DataPathBox.Text = dialog.FileName;
+
+            dialog.Dispose();
+        }
+
+        private void Window_OnClosed(object sender, EventArgs e)
+        {
+            _enumerable.Dispose();
+            _writer.Dispose();
+            Environment.Exit(Environment.ExitCode);
         }
     }
 }
