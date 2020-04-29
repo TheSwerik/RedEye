@@ -6,8 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Alturos.Yolo" Version="2.6.4" />
+      <PackageReference Include="Alturos.YoloV2TinyVocData" Version="1.0.0" />
       <PackageReference Include="Microsoft.ML" Version="1.4.0" />
       <PackageReference Include="Microsoft.ML.CpuMath" Version="1.4.0" />
+      <PackageReference Include="Microsoft.ML.FastTree" Version="1.4.0" />
       <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.4.0" />
       <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.4.0" />
       <PackageReference Include="Microsoft.ML.TensorFlow" Version="1.4.0" />
@@ -15,12 +18,7 @@
       <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.1.0" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="$(SolutionDir)assets\LFW\**"
-              CopyToOutputDirectory="PreserveNewest"
-              LinkBase="assets\LFW" />
-<!--        <Content Include="..\assets\LFW\*\*.*">-->
-<!--            <CopyToOutputDirectory >PreserveNewest</CopyToOutputDirectory>-->
-<!--        </Content>-->
+        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />
     </ItemGroup>
 
 </Project>

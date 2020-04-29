@@ -2,10 +2,9 @@
 
 namespace AITestProject.AI.Data
 {
-    public class ImagePrediction : ImageData
+    public class ImagePrediction
     {
-        // public float[] Score;
-
-        [ColumnName("grid")] public float[] PredictedLabels;
+        [ColumnName("leftEyeArea")] public float[] LeftEyeArea;
+        [ColumnName("rightEyeArea")] public float[] RightEyeArea;
     }
 }
