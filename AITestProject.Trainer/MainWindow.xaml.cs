@@ -23,19 +23,33 @@ namespace AITestProject.Trainer
     public partial class MainWindow : Window
     {
         private readonly IEnumerator<ImageData> _enumerable;
+        private bool _leftEyeFound;
 
         public MainWindow()
         {
             InitializeComponent();
             _enumerable = ImageData.ReadFromFile(Directory.GetCurrentDirectory() + @"\assets\LFW\").GetEnumerator();
             Pic.Source = NextImage();
+            _leftEyeFound = false;
         }
 
         private void Image_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            var p = e.GetPosition((Image) sender);
-            Console.WriteLine("X: {0}, Y: {1}", (int) p.X, (int) p.Y);
-            Pic.Source = NextImage();
+            var point = e.GetPosition((Image) sender);
+
+            if (!_leftEyeFound)
+            {
+                _leftEyeFound = true;
+                Console.Write("Left Eye:\t");
+            }
+            else
+            {
+                Pic.Source = NextImage();
+                _leftEyeFound = false;
+                Console.Write("Right Eye:\t");
+            }
+            
+            Console.WriteLine("X: {0}, Y: {1}", (int) point.X, (int) point.Y);
         }
 
         private void Window_OnClosed(object? sender, EventArgs e)
