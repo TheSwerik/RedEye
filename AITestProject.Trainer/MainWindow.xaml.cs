@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -79,7 +80,14 @@ namespace AITestProject.Trainer
         private BitmapImage NextImage()
         {
             if (!_enumerable.MoveNext()) throw new ArgumentException("This was the Last element.");
-            return new BitmapImage(new Uri(ImagePath()));
+            using var stream = new FileStream(ImagePath(), FileMode.Open);
+            var bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.StreamSource = stream;
+            bitmapImage.EndInit();
+            bitmapImage.Freeze(); 
+            return bitmapImage;
         }
 
         private string ImagePath()
@@ -95,6 +103,11 @@ namespace AITestProject.Trainer
                 _writer.WriteLine(", " + (int) p.X + ", " + (int) p.Y);
                 _writer.Flush();
             }
+        }
+        private void Dispose()
+        {
+            _enumerable.Dispose();
+            _writer.Dispose();
         }
 
         // UI:
@@ -118,8 +131,7 @@ namespace AITestProject.Trainer
 
         private void Window_OnClosed(object sender, EventArgs e)
         {
-            _enumerable.Dispose();
-            _writer.Dispose();
+            Dispose();
             Environment.Exit(Environment.ExitCode);
         }
 
@@ -128,5 +140,17 @@ namespace AITestProject.Trainer
             _writer.Dispose();
             var trainer = new Training();
         }
+
+        private void SkipButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var file = new FileInfo(ImagePath());
+            var replaceFolder = file.Directory?.FullName.Replace(@"\LFW\", @"\skip\");
+            Console.WriteLine(replaceFolder);
+            if (!Directory.Exists(replaceFolder)) Directory.CreateDirectory(replaceFolder);
+
+            File.Move(file.FullName, replaceFolder + '\\' + file.Name, true);
+            Pic.Source = NextImage();
+        }
+
     }
 }
