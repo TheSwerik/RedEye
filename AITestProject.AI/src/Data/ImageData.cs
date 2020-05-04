@@ -7,7 +7,7 @@ namespace AITestProject.AI.Data
 {
     public class ImageData
     {
-        [LoadColumn(0)] public string ImagePath;
+        [LoadColumn(0)] [ColumnName("Label")] public string ImagePath;
         [LoadColumn(1)] public int LeftEyeX { get; set; }
         [LoadColumn(2)] public int LeftEyeY { get; set; }
         [LoadColumn(3)] public int RightEyeX { get; set; }
