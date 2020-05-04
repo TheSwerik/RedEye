@@ -7,9 +7,13 @@ namespace AITestProject.AI.Data
 {
     public class ImageData
     {
+        // [LoadColumn(4)]
+        // [ColumnName("Label")]
+        // public float CurrentPrice { get; set; }
+
         [LoadColumn(0)] public string ImagePath;
-        [LoadColumn(1)] public int[] LeftEyeCoordinate { get; set; }
-        [LoadColumn(2)] public int[] RightEyeCoordinate { get; set; }
+        [LoadColumn(1, 2)] [VectorType(2)] public int[] LeftEyeArea { get; set; }
+        [LoadColumn(3, 4)] [VectorType(2)] public int[] RightEyeArea { get; set; }
 
         public static IEnumerable<ImageData> ReadDataFromFile(string imageFolder)
         {
@@ -25,8 +29,8 @@ namespace AITestProject.AI.Data
                                return new ImageData
                                       {
                                           ImagePath = values[0],
-                                          LeftEyeCoordinate = new int[] {int.Parse(values[1]), int.Parse(values[2])},
-                                          RightEyeCoordinate = new int[] {int.Parse(values[3]), int.Parse(values[4])}
+                                          LeftEyeArea = new[] {int.Parse(values[1]), int.Parse(values[2])},
+                                          RightEyeArea = new[] {int.Parse(values[3]), int.Parse(values[4])}
                                       };
                            });
         }

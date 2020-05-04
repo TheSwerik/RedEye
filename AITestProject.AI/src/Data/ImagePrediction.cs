@@ -4,7 +4,7 @@ namespace AITestProject.AI.Data
 {
     public class ImagePrediction
     {
-        [ColumnName("leftEyeArea")] public int[] LeftEyeCoordinate;
-        [ColumnName("rightEyeArea")] public int[] RightEyeCoordinate;
+        [ColumnName("leftEyeArea")] public int[] LeftEyeArea;
+        [ColumnName("rightEyeArea")] public int[] RightEyeArea;
     }
 }
