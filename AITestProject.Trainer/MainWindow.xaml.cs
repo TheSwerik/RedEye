@@ -3,18 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using AITestProject.AI;
 using AITestProject.AI.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -51,7 +43,7 @@ namespace AITestProject.Trainer
             _enumerable = ImageData.ReadImagesFromFile(Directory.GetCurrentDirectory() + @"\assets\LFW\")
                                    .Skip(lines)
                                    .GetEnumerator();
-            Pic.Source = NextImage();
+            NextImage();
             _leftEyeFound = false;
         }
 
@@ -70,14 +62,14 @@ namespace AITestProject.Trainer
                 AppendToFile(point);
                 _leftEyeFound = false;
                 Console.Write("Right Eye:\t");
-                Pic.Source = NextImage();
+                NextImage();
             }
 
             Console.WriteLine("X: {0}, Y: {1}", (int) point.X, (int) point.Y);
         }
 
         // Helper Methods:
-        private BitmapImage NextImage()
+        private void NextImage()
         {
             if (!_enumerable.MoveNext()) throw new ArgumentException("This was the Last element.");
             using var stream = new FileStream(ImagePath(), FileMode.Open);
@@ -86,8 +78,8 @@ namespace AITestProject.Trainer
             bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
             bitmapImage.StreamSource = stream;
             bitmapImage.EndInit();
-            bitmapImage.Freeze(); 
-            return bitmapImage;
+            bitmapImage.Freeze();
+            Pic.Source = bitmapImage;
         }
 
         private string ImagePath()
@@ -104,6 +96,7 @@ namespace AITestProject.Trainer
                 _writer.Flush();
             }
         }
+
         private void Dispose()
         {
             _enumerable.Dispose();
@@ -149,8 +142,7 @@ namespace AITestProject.Trainer
             if (!Directory.Exists(replaceFolder)) Directory.CreateDirectory(replaceFolder);
 
             File.Move(file.FullName, replaceFolder + '\\' + file.Name, true);
-            Pic.Source = NextImage();
+            NextImage();
         }
-
     }
 }
