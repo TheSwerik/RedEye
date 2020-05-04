@@ -58,7 +58,9 @@ namespace AITestProject.AI
             var predictor = _mlContext.Model.CreatePredictionEngine<ImageData, ImagePrediction>(model);
             var prediction = predictor.Predict(imageData);
             Console.Write($"Image: {Path.GetFileName(prediction.PredictedImageName)} predicted: " +
-                          $"Data: {string.Join(", ", prediction.Positions)}");
+                          (prediction.Positions == null
+                               ? "NULLLLLL"
+                               : $"Data: {string.Join(", ", prediction.Positions)}"));
         }
 
         private static void DisplayResults(IEnumerable<ImagePrediction> imagePredictionData)
