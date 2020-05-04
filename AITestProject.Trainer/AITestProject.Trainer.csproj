@@ -7,16 +7,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-<!--            TODO only use this once-->
-        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />
-        <None Include="$(SolutionDir)assets\*.tsv" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\ImageData.tsv"/>
+        <!--            TODO only use this once-->
+        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW"/>
+        <None Include="$(SolutionDir)assets\*.tsv" CopyToOutputDirectory="PreserveNewest" LinkBase="assets"/>
+        <None Include="$(SolutionDir)assets\skip\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\skip"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AITestProject.AI\AITestProject.AI.csproj" />
+        <ProjectReference Include="..\AITestProject.AI\AITestProject.AI.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Update="..\assets"/>
     </ItemGroup>
 </Project>
