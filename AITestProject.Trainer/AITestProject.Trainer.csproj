@@ -9,6 +9,7 @@
     <ItemGroup>
 <!--            TODO only use this once-->
         <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />
+        <None Include="$(SolutionDir)assets\*.tsv" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\ImageData.tsv"/>
     </ItemGroup>
 
     <ItemGroup>
