@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using AITestProject.AI.Data;
@@ -18,7 +19,7 @@ namespace AITestProject.AI
             Console.WriteLine("Found {0} Images. {1} of them have data.",
                               ImageData.ReadImagesFromFile(_assets.FullName).Count(),
                               ImageData.ReadDataFromFile(Directory.GetCurrentDirectory()).Count());
-            Start();
+            Train();
         }
 
         private void Start()
@@ -31,45 +32,74 @@ namespace AITestProject.AI
                 );
         }
 
-        private static ITransformer Train(MLContext mlContext, string trainDataPath)
+        private ITransformer Train()
         {
-            mlContext = new MLContext();
-            var data = mlContext.Data.LoadFromTextFile<ImageData>("assets/ImageData.tsv", ',');
-            var splitData = mlContext.Data.TrainTestSplit(data, 0.2);
+            var data = _mlContext.Data.LoadFromTextFile<ImageData>("assets/ImageData.tsv", ',');
+            var splitData = _mlContext.Data.TrainTestSplit(data, 0.2);
             var testData = splitData.TestSet;
             var trainData = splitData.TrainSet;
 
-            var dataPrepEstimator = mlContext.Transforms
-                                             .Concatenate("Features", "ImagePath", "LeftEyeArea")
-                                             .Append(mlContext.Transforms.NormalizeMinMax("Features"));
+            var dataPrepEstimator =
+                    _mlContext.Transforms
+                              .Concatenate("Label", "LeftEyeArea")
+                              // .Append(_mlContext.Transforms.CopyColumns("Label", "LeftEyeArea"))
+                              .Append(_mlContext.Transforms.Categorical.OneHotEncoding("ImagePathEncoded", "ImagePath"))
+                              .Append(_mlContext.Transforms.Concatenate("Features", "ImagePathEncoded"))
+                ;
 
             // Create data prep transformer & Apply transforms to training data
             var transformedTrainingData = dataPrepEstimator.Fit(trainData).Transform(trainData);
 
-
-            var pipelineForTripTime = mlContext.Transforms.CopyColumns("Label", "LeftEyeArea")
-                                               .Append(mlContext.Regression.Trainers.FastTree())
-                                               .Append(mlContext.Transforms.CopyColumns(
-                                                           "leftEyeArea",
-                                                           "Score"));
-
-            var pipelineForFareAmount = mlContext.Transforms.CopyColumns("Label", "FareAmount")
-                                                 .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId"))
-                                                 .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode"))
-                                                 .Append(
-                                                     mlContext.Transforms.Categorical.OneHotEncoding("PaymentType"))
-                                                 .Append(mlContext.Transforms.Concatenate("Features", "VendorId",
-                                                                                          "RateCode", "PassengerCount",
-                                                                                          "TripDistance",
-                                                                                          "PaymentType"))
-                                                 .Append(mlContext.Regression.Trainers.FastTree())
-                                                 .Append(mlContext.Transforms.CopyColumns(
-                                                             "fareAmount",
-                                                             "Score"));
+            var model1 = _mlContext.Regression.Trainers.FastTree().Fit(transformedTrainingData);
+            ClassifySingleImage(_mlContext, model1);
+            return model1;
 
 
-            var model = pipelineForTripTime.Append(pipelineForFareAmount).Fit(data);
-            return model;
+            // var pipelineForFareAmount = mlContext.Transforms.CopyColumns("Label", "FareAmount")
+            //                                      .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId"))
+            //                                      .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode"))
+            //                                      .Append(
+            //                                          mlContext.Transforms.Categorical.OneHotEncoding("PaymentType"))
+            //                                      .Append(mlContext.Transforms.Concatenate("Features", "VendorId",
+            //                                                                               "RateCode", "PassengerCount",
+            //                                                                               "TripDistance",
+            //                                                                               "PaymentType"))
+            //                                      .Append(mlContext.Regression.Trainers.FastTree())
+            //                                      .Append(mlContext.Transforms.CopyColumns(
+            //                                                  "fareAmount",
+            //                                                  "Score"));
+            //
+            //
+            // var model = pipelineForTripTime.Append(pipelineForFareAmount).Fit(data);
+            // return model;
+        }
+
+        public static void ClassifySingleImage(MLContext mlContext, ITransformer model)
+        {
+            var imageData = new ImageData
+                            {
+                                ImagePath = @"assets\LFW\Philippe_Noiret\Philippe_Noiret_0001.jpg"
+                            };
+            // Make prediction function (input = ImageData, output = ImagePrediction)
+            var predictor = mlContext.Model.CreatePredictionEngine<ImageData, ImagePrediction>(model);
+            var prediction = predictor.Predict(imageData);
+            Console.Write($"Image: {Path.GetFileName(prediction.ImagePath)} predicted: ");
+            Console.Write(
+                $"Left Eye: {string.Join(", ", prediction.PredictedLeftEyeAreaValue)} with score: {prediction.Score.Max()} ");
+            Console.WriteLine(
+                $"Right Eye: {string.Join(", ", prediction.PredictedRightEyeAreaValue)} with score: {prediction.Score.Max()} ");
+        }
+
+        private static void DisplayResults(IEnumerable<ImagePrediction> imagePredictionData)
+        {
+            foreach (var prediction in imagePredictionData)
+            {
+                Console.Write($"Image: {Path.GetFileName(prediction.ImagePath)} predicted: ");
+                Console.Write(
+                    $"Left Eye: {string.Join(", ", prediction.PredictedLeftEyeAreaValue)} with score: {prediction.Score.Max()} ");
+                Console.WriteLine(
+                    $"Right Eye: {string.Join(", ", prediction.PredictedRightEyeAreaValue)} with score: {prediction.Score.Max()} ");
+            }
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using Microsoft.ML.Data;
-
-namespace AITestProject.AI.Data
+﻿namespace AITestProject.AI.Data
 {
-    public class ImagePrediction
+    public class ImagePrediction : ImageData
     {
-        [ColumnName("leftEyeArea")] public int[] LeftEyeArea;
-        [ColumnName("rightEyeArea")] public int[] RightEyeArea;
+        public float[] PredictedLeftEyeAreaValue;
+        public float[] PredictedRightEyeAreaValue;
+        public float[] Score;
     }
 }
