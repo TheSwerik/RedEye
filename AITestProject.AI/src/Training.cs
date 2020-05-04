@@ -32,23 +32,21 @@ namespace AITestProject.AI
                 );
         }
 
-        private ITransformer Train()
+        private void Train()
         {
             var data = _mlContext.Data.LoadFromTextFile<ImageData>("assets/ImageData.tsv", ',');
             var splitData = _mlContext.Data.TrainTestSplit(data, 0.2);
             var testData = splitData.TestSet;
             var trainData = splitData.TrainSet;
 
-            var dataPrepEstimator = _mlContext.Transforms
-                                              .Concatenate("Features", "LeftEyeX", "LeftEyeY", "RightEyeX", "RightEyeY")
-                ;
+            var pipeline = _mlContext.Transforms
+                                     .Concatenate("Features", "LeftEyeX", "LeftEyeY", "RightEyeX", "RightEyeY");
 
-            var model1 = dataPrepEstimator.Fit(testData);
-            ClassifySingleImage(model1);
-            return model1;
+            var model = pipeline.Fit(testData);
+            ClassifySingleImage(model);
         }
 
-        public void ClassifySingleImage(ITransformer model)
+        private void ClassifySingleImage(ITransformer model)
         {
             var imageData = new ImageData
                             {
