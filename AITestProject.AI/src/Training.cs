@@ -1,19 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using AITestProject.AI.Data;
-using Alturos.Yolo;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace AITestProject.AI
 {
     public class Training
     {
-        private readonly MLContext _mlContext;
         private readonly DirectoryInfo _assets;
+        private readonly MLContext _mlContext;
 
         public Training()
         {
@@ -28,13 +24,11 @@ namespace AITestProject.AI
         private void Start()
         {
             foreach (var image in ImageData.ReadDataFromFile(Directory.GetCurrentDirectory()))
-            {
                 Console.WriteLine(
                     $"{Path.GetFileName(image.ImagePath)}:\t" +
                     $"Left Eye: {string.Join(", ", image.LeftEyeCoordinate)}\t" +
                     $"Right Eye: {string.Join(", ", image.RightEyeCoordinate)}"
                 );
-            }
         }
     }
 }
