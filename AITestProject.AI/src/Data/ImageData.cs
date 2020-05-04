@@ -7,13 +7,11 @@ namespace AITestProject.AI.Data
 {
     public class ImageData
     {
-        // [LoadColumn(4)]
-        // [ColumnName("Label")]
-        // public float CurrentPrice { get; set; }
-
         [LoadColumn(0)] public string ImagePath;
-        [LoadColumn(1, 2)] [VectorType(2)] public int[] LeftEyeArea { get; set; }
-        [LoadColumn(3, 4)] [VectorType(2)] public int[] RightEyeArea { get; set; }
+        [LoadColumn(1)] public int LeftEyeX { get; set; }
+        [LoadColumn(2)] public int LeftEyeY { get; set; }
+        [LoadColumn(3)] public int RightEyeX { get; set; }
+        [LoadColumn(4)] public int RightEyeY { get; set; }
 
         public static IEnumerable<ImageData> ReadDataFromFile(string imageFolder)
         {
@@ -29,10 +27,11 @@ namespace AITestProject.AI.Data
                                return new ImageData
                                       {
                                           ImagePath = values[0],
-                                          LeftEyeArea = new[] {int.Parse(values[1]), int.Parse(values[2])},
-                                          RightEyeArea = new[] {int.Parse(values[3]), int.Parse(values[4])}
+                                          LeftEyeX = int.Parse(values[1]), LeftEyeY = int.Parse(values[2]),
+                                          RightEyeX = int.Parse(values[3]), RightEyeY = int.Parse(values[4])
                                       };
-                           });
+                           }
+                   );
         }
 
         public static IEnumerable<string> ReadImagesFromFile(string imageFolder)

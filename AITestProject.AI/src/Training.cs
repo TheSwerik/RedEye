@@ -27,8 +27,8 @@ namespace AITestProject.AI
             foreach (var image in ImageData.ReadDataFromFile(Directory.GetCurrentDirectory()))
                 Console.WriteLine(
                     $"{Path.GetFileName(image.ImagePath)}:\t" +
-                    $"Left Eye: {string.Join(", ", image.LeftEyeArea)}\t" +
-                    $"Right Eye: {string.Join(", ", image.RightEyeArea)}"
+                    $"Left Eye: {image.LeftEyeX}, {image.LeftEyeY}\t" +
+                    $"Right Eye: {image.RightEyeX}, {image.RightEyeY}"
                 );
         }
 
@@ -39,67 +39,34 @@ namespace AITestProject.AI
             var testData = splitData.TestSet;
             var trainData = splitData.TrainSet;
 
-            var dataPrepEstimator =
-                    _mlContext.Transforms
-                              .Concatenate("Label", "LeftEyeArea")
-                              // .Append(_mlContext.Transforms.CopyColumns("Label", "LeftEyeArea"))
-                              .Append(_mlContext.Transforms.Categorical.OneHotEncoding("ImagePathEncoded", "ImagePath"))
-                              .Append(_mlContext.Transforms.Concatenate("Features", "ImagePathEncoded"))
-                ;
+            var dataPrepEstimator = _mlContext.Transforms
+                                              .Concatenate("Features", "LeftEyeX", "LeftEyeY", "RightEyeX", "RightEyeY")
+                                              .Append(_mlContext.MulticlassClassification.Trainers.(
+                                                          "Features", numberOfClusters: 3));
 
-            // Create data prep transformer & Apply transforms to training data
-            var transformedTrainingData = dataPrepEstimator.Fit(trainData).Transform(trainData);
-
-            var model1 = _mlContext.Regression.Trainers.FastTree().Fit(transformedTrainingData);
-            ClassifySingleImage(_mlContext, model1);
+            var model1 = dataPrepEstimator.Fit(testData);
+            ClassifySingleImage(model1);
             return model1;
-
-
-            // var pipelineForFareAmount = mlContext.Transforms.CopyColumns("Label", "FareAmount")
-            //                                      .Append(mlContext.Transforms.Categorical.OneHotEncoding("VendorId"))
-            //                                      .Append(mlContext.Transforms.Categorical.OneHotEncoding("RateCode"))
-            //                                      .Append(
-            //                                          mlContext.Transforms.Categorical.OneHotEncoding("PaymentType"))
-            //                                      .Append(mlContext.Transforms.Concatenate("Features", "VendorId",
-            //                                                                               "RateCode", "PassengerCount",
-            //                                                                               "TripDistance",
-            //                                                                               "PaymentType"))
-            //                                      .Append(mlContext.Regression.Trainers.FastTree())
-            //                                      .Append(mlContext.Transforms.CopyColumns(
-            //                                                  "fareAmount",
-            //                                                  "Score"));
-            //
-            //
-            // var model = pipelineForTripTime.Append(pipelineForFareAmount).Fit(data);
-            // return model;
         }
 
-        public static void ClassifySingleImage(MLContext mlContext, ITransformer model)
+        public void ClassifySingleImage(ITransformer model)
         {
             var imageData = new ImageData
                             {
                                 ImagePath = @"assets\LFW\Philippe_Noiret\Philippe_Noiret_0001.jpg"
                             };
             // Make prediction function (input = ImageData, output = ImagePrediction)
-            var predictor = mlContext.Model.CreatePredictionEngine<ImageData, ImagePrediction>(model);
+            var predictor = _mlContext.Model.CreatePredictionEngine<ImageData, ImagePrediction>(model);
             var prediction = predictor.Predict(imageData);
-            Console.Write($"Image: {Path.GetFileName(prediction.ImagePath)} predicted: ");
-            Console.Write(
-                $"Left Eye: {string.Join(", ", prediction.PredictedLeftEyeAreaValue)} with score: {prediction.Score.Max()} ");
-            Console.WriteLine(
-                $"Right Eye: {string.Join(", ", prediction.PredictedRightEyeAreaValue)} with score: {prediction.Score.Max()} ");
+            Console.Write($"Image: {Path.GetFileName(prediction.PredictedImageName)} predicted: " +
+                          $"Data: {string.Join(", ", prediction.Positions)}");
         }
 
         private static void DisplayResults(IEnumerable<ImagePrediction> imagePredictionData)
         {
             foreach (var prediction in imagePredictionData)
-            {
-                Console.Write($"Image: {Path.GetFileName(prediction.ImagePath)} predicted: ");
-                Console.Write(
-                    $"Left Eye: {string.Join(", ", prediction.PredictedLeftEyeAreaValue)} with score: {prediction.Score.Max()} ");
-                Console.WriteLine(
-                    $"Right Eye: {string.Join(", ", prediction.PredictedRightEyeAreaValue)} with score: {prediction.Score.Max()} ");
-            }
+                Console.Write($"Image: {Path.GetFileName(prediction.PredictedImageName)} predicted: " +
+                              $"Data: {string.Join(", ", prediction.Positions)}");
         }
     }
 }
