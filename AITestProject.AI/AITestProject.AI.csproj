@@ -6,8 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Alturos.Yolo" Version="2.6.4" />
-      <PackageReference Include="Alturos.YoloV2TinyVocData" Version="1.0.0" />
       <PackageReference Include="Microsoft.ML" Version="1.4.0" />
       <PackageReference Include="Microsoft.ML.CpuMath" Version="1.4.0" />
       <PackageReference Include="Microsoft.ML.FastTree" Version="1.4.0" />
