@@ -41,8 +41,7 @@ namespace AITestProject.AI
 
             var dataPrepEstimator = _mlContext.Transforms
                                               .Concatenate("Features", "LeftEyeX", "LeftEyeY", "RightEyeX", "RightEyeY")
-                                              .Append(_mlContext.MulticlassClassification.Trainers.(
-                                                          "Features", numberOfClusters: 3));
+                ;
 
             var model1 = dataPrepEstimator.Fit(testData);
             ClassifySingleImage(model1);
