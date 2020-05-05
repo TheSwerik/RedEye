@@ -1,7 +1,7 @@
-﻿<Application x:Class="AITestProject.Trainer.App"
+﻿<Application x:Class="AITestProject.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AITestProject.Trainer"
+             xmlns:local="clr-namespace:AITestProject"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 

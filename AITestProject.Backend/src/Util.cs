@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace AITestProject.AI
+namespace AITestProject
 {
     public class Util
     {

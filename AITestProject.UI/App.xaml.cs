@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace AITestProject.Trainer
+namespace AITestProject
 {
     /// <summary>
     ///     Interaction logic for App.xaml
