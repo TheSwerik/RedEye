@@ -63,7 +63,10 @@ namespace AITestProject
         private void Dispose()
         {
             _enumerable.Dispose();
-            if (_camera != null && _camera.IsRunning) _camera.Stop();
+            if (_camera == null || !_camera.IsRunning) return;
+            _camera.SignalToStop();
+            _camera.WaitForStop();
+            _camera = null;
         }
 
         // UI:
@@ -104,22 +107,14 @@ namespace AITestProject
         private void RadioButton_OnChecked(object sender, RoutedEventArgs e)
         {
             if (Pic == null) return;
+            if (_camera != null && _camera.IsRunning)
+            {
+                _camera.SignalToStop();
+                _camera.WaitForStop();
+                _camera = null;
+            }
+
             NextButton_OnClick(null, null);
-
-            try
-            {
-                if (_camera != null && _camera.IsRunning)
-                {
-                    _camera.Stop();
-                    Console.WriteLine("stoppe");
-                    _camera.WaitForStop();
-                }
-            }
-            catch (System.PlatformNotSupportedException)
-            {
-                Console.WriteLine("err");
-            }
-
             NextButton.Visibility = Visibility.Visible;
             DeviceBox.Visibility = StartButton.Visibility = Visibility.Hidden;
         }
@@ -143,7 +138,12 @@ namespace AITestProject
         private void DeviceBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!RadioButtonCamera.IsChecked ?? false) return;
-            if (_camera != null && _camera.IsRunning) _camera.Stop();
+            if (_camera != null && _camera.IsRunning)
+            {
+                _camera.SignalToStop();
+                _camera.WaitForStop();
+            }
+
             _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
             _camera.NewFrame += new NewFrameEventHandler(Camera_NewFrame);
             _camera.Start();
