@@ -6,7 +6,7 @@ namespace AITestProject.AI
     {
         internal static void Main(string[] args)
         {
-            var trainer = new Training();
+            Console.WriteLine("Test");
         }
     }
 }
