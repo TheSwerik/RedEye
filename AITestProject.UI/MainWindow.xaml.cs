@@ -164,7 +164,7 @@ namespace AITestProject
                 bi.EndInit();
 
                 bi.Freeze();
-                Dispatcher.BeginInvoke((Action) (() => Test(bi)));
+                Dispatcher.BeginInvoke((Action) (() => WebcameNextFrame(bi, (Bitmap) img)));
             }
             catch (Exception)
             {
@@ -172,9 +172,13 @@ namespace AITestProject
             }
         }
 
-        private void Test(ImageSource bi)
+        private void WebcameNextFrame(ImageSource bi, Bitmap bitmap)
         {
             Pic.Source = bi;
+            // TODO get frame as emgu Image and find face
+            // var grayImage = Mat.Zeros(720, 720, 3);
+            // CvInvoke.cvCopy(bitmap.ToIplImage(), grayImage);
+            // DetectFaces(grayImage);
         }
     }
 }
