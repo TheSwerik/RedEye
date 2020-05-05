@@ -8,9 +8,4 @@
         <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Emgu.CV" Version="4.2.0.3662"/>
-        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662"/>
-    </ItemGroup>
-
 </Project>

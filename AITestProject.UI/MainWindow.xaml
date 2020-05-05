@@ -17,16 +17,25 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="1.25*" />
         </Grid.RowDefinitions>
 
         <WrapPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center">
             <RadioButton Content="Image" Margin="0 0 20 0" Checked="RadioButton_OnChecked" IsChecked="True" />
-            <RadioButton Content="Camera" Checked="RadioButtonCamera_OnChecked" />
+            <RadioButton Content="Camera" Checked="RadioButtonCamera_OnChecked" x:Name="RadioButtonCamera"/>
         </WrapPanel>
 
-        <Image Grid.Column="1" Grid.Row="2" x:Name="Pic" />
+        <ComboBox Grid.Column="1" Grid.Row="2" Text="Device:" x:Name="DeviceBox"
+                  SelectionChanged="DeviceBox_OnSelectionChanged" />
 
-        <Button Grid.Column="1" Grid.Row="3" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" Width="250" />
+        <Canvas Grid.Column="1" Grid.Row="3" x:Name="canvas" Height="250" HorizontalAlignment="Left">
+            <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant" Height="250" />
+        </Canvas>
+
+        <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" Width="250" />
+
+        <Button Grid.Column="1" Grid.Row="4" Content="Start" x:Name="StartButton" Click="btnStart_Click" Width="250"
+                Visibility="Hidden" />
     </Grid>
 </Window>

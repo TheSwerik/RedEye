@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using AForge.Video;
+using AForge.Video.DirectShow;
+using Emgu.CV;
+using Emgu.CV.Structure;
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace AITestProject
 {
     public partial class MainWindow : Window
     {
+        private readonly CascadeClassifier _cascadeClassifier =
+            new CascadeClassifier(@"assets\haarcascade_frontalface_default.xml");
+
         private readonly IEnumerator<string> _enumerable;
-        private bool showCamera;
+        private readonly FilterInfoCollection _filterInfoCollection;
+
+        private VideoCaptureDevice _camera;
+
 
         public MainWindow()
         {
@@ -18,6 +33,12 @@ namespace AITestProject
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             _enumerable = Util.GetImages(@"assets\LFW").GetEnumerator();
             NextImage();
+
+            _filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            foreach (FilterInfo filter in _filterInfoCollection) DeviceBox.Items.Add(filter.Name);
+            DeviceBox.SelectedIndex = 0;
+
+            _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
         }
 
         // Helper Methods:
@@ -42,6 +63,7 @@ namespace AITestProject
         private void Dispose()
         {
             _enumerable.Dispose();
+            if (_camera != null && _camera.IsRunning) _camera.Stop();
         }
 
         // UI:
@@ -53,22 +75,106 @@ namespace AITestProject
 
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
+            canvas.Children.Clear();
             NextImage();
+            canvas.Children.Add(Pic);
+
+            var grayImage = new Mat(ImagePath()).ToImage<Gray, byte>();
+            DetectFaces(grayImage);
+        }
+
+        private void DetectFaces(IOutputArrayOfArrays grayImage)
+        {
+            if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
+            var rectangles = _cascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
+
+            foreach (var rect in rectangles)
+            {
+                var rectangle = new Rectangle();
+                Canvas.SetLeft(rectangle, rect.X);
+                Canvas.SetTop(rectangle, rect.Y);
+                rectangle.Width = rect.Width;
+                rectangle.Height = rect.Height;
+                rectangle.Stroke = new SolidColorBrush() {Color = Colors.Red, Opacity = 1f};
+
+                canvas.Children.Add(rectangle);
+            }
         }
 
         private void RadioButton_OnChecked(object sender, RoutedEventArgs e)
         {
-            showCamera = false;
             if (Pic == null) return;
-            NextImage();
+            NextButton_OnClick(null, null);
+
+            try
+            {
+                if (_camera != null && _camera.IsRunning)
+                {
+                    _camera.Stop();
+                    Console.WriteLine("stoppe");
+                    _camera.WaitForStop();
+                }
+            }
+            catch (System.PlatformNotSupportedException)
+            {
+                Console.WriteLine("err");
+            }
+
             NextButton.Visibility = Visibility.Visible;
+            DeviceBox.Visibility = StartButton.Visibility = Visibility.Hidden;
         }
 
         private void RadioButtonCamera_OnChecked(object sender, RoutedEventArgs e)
         {
-            showCamera = true;
+            canvas.Children.Clear();
             Pic.Source = null;
+            canvas.Children.Add(Pic);
+
             NextButton.Visibility = Visibility.Hidden;
+            DeviceBox.Visibility = StartButton.Visibility = Visibility.Visible;
+            DeviceBox_OnSelectionChanged(null, null);
+        }
+
+        //Webcam stuff:
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void DeviceBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!RadioButtonCamera.IsChecked ?? false) return;
+            if (_camera != null && _camera.IsRunning) _camera.Stop();
+            _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
+            _camera.NewFrame += new NewFrameEventHandler(Camera_NewFrame);
+            _camera.Start();
+        }
+
+        private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        {
+            try
+            {
+                System.Drawing.Image img = (Bitmap) eventArgs.Frame.Clone();
+
+                var ms = new MemoryStream();
+                img.Save(ms, ImageFormat.Bmp);
+                ms.Seek(0, SeekOrigin.Begin);
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.StreamSource = ms;
+                bi.EndInit();
+
+                bi.Freeze();
+                Dispatcher.BeginInvoke((Action) (() => Test(bi)));
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        private void Test(ImageSource bi)
+        {
+            Pic.Source = bi;
         }
     }
 }
