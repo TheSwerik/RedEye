@@ -4,13 +4,13 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>AITestProject</RootNamespace>
+        <Configurations>Release;Debug</Configurations>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Emgu.CV" Version="4.2.0.3662"/>
+        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662"/>
     </ItemGroup>
-<!--    <ItemGroup>-->
-<!--        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />-->
-<!--    </ItemGroup>-->
 
 </Project>

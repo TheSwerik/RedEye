@@ -16,11 +16,17 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="1.25*" />
         </Grid.RowDefinitions>
 
-        <Image Grid.Column="1" Grid.Row="1" x:Name="Pic" />
+        <WrapPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center">
+            <RadioButton Content="Image" Margin="0 0 20 0" Checked="RadioButton_OnChecked" IsChecked="True" />
+            <RadioButton Content="Camera" Checked="RadioButtonCamera_OnChecked" />
+        </WrapPanel>
 
-        <Button Grid.Column="1" Grid.Row="2" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" Width="250" />
+        <Image Grid.Column="1" Grid.Row="2" x:Name="Pic" />
+
+        <Button Grid.Column="1" Grid.Row="3" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" Width="250" />
     </Grid>
 </Window>

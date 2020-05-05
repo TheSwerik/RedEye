@@ -10,6 +10,7 @@ namespace AITestProject
     public partial class MainWindow : Window
     {
         private readonly IEnumerator<string> _enumerable;
+        private bool showCamera;
 
         public MainWindow()
         {
@@ -23,7 +24,6 @@ namespace AITestProject
         private void NextImage()
         {
             if (!_enumerable.MoveNext()) throw new ArgumentException("This was the Last element.");
-            Console.WriteLine(ImagePath());
             using var stream = new FileStream(ImagePath(), FileMode.Open);
             var bitmapImage = new BitmapImage();
             bitmapImage.BeginInit();
@@ -54,6 +54,21 @@ namespace AITestProject
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
             NextImage();
+        }
+
+        private void RadioButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            showCamera = false;
+            if (Pic == null) return;
+            NextImage();
+            NextButton.Visibility = Visibility.Visible;
+        }
+
+        private void RadioButtonCamera_OnChecked(object sender, RoutedEventArgs e)
+        {
+            showCamera = true;
+            Pic.Source = null;
+            NextButton.Visibility = Visibility.Hidden;
         }
     }
 }
