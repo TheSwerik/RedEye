@@ -4,6 +4,7 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
+        <RootNamespace>AITestProject.Trainer</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,14 +15,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AITestProject.AI\AITestProject.AI.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1"/>
     </ItemGroup>
 
     <ItemGroup>
         <Folder Update="..\assets"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AITestProject.Backend\AITestProject.Backend.csproj"/>
     </ItemGroup>
 </Project>

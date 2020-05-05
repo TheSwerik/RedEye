@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AITestProject.AI", "AITestProject.AI\AITestProject.AI.csproj", "{221857DC-8086-4CB2-92C9-B19D021D33A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AITestProject.Backend", "AITestProject.Backend\AITestProject.Backend.csproj", "{221857DC-8086-4CB2-92C9-B19D021D33A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AITestProject.Trainer", "AITestProject.Trainer\AITestProject.Trainer.csproj", "{B76C29E4-D5A9-46AF-A9E3-323B6A2BF96A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AITestProject.UI", "AITestProject.UI\AITestProject.UI.csproj", "{B76C29E4-D5A9-46AF-A9E3-323B6A2BF96A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

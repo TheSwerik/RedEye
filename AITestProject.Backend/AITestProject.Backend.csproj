@@ -3,10 +3,11 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>AITestProject.AI</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Emgu.CV" Version="4.2.0.3662"/>
+        <PackageReference Include="Emgu.CV" Version="4.2.0.3662"/>
     </ItemGroup>
 <!--    <ItemGroup>-->
 <!--        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />-->
