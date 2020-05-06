@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,8 +13,10 @@ using System.Windows.Media.Imaging;
 using AForge.Video;
 using AForge.Video.DirectShow;
 using Emgu.CV;
+using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Rectangle = System.Windows.Shapes.Rectangle;
+using Size = System.Drawing.Size;
 
 namespace AITestProject
 {
@@ -39,6 +43,8 @@ namespace AITestProject
             DeviceBox.SelectedIndex = 0;
 
             _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
+            Console.WriteLine(string.Join("\n", _camera.VideoCapabilities.Select(v => v.MaximumFrameRate)));
+            _camera.VideoResolution = _camera.VideoCapabilities[0];
         }
 
         // Helper Methods:
@@ -144,10 +150,13 @@ namespace AITestProject
                 _camera.WaitForStop();
             }
 
+            watch.Start();
             _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
             _camera.NewFrame += new NewFrameEventHandler(Camera_NewFrame);
             _camera.Start();
         }
+
+        Stopwatch watch = new Stopwatch();
 
         private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
@@ -168,7 +177,7 @@ namespace AITestProject
             }
             catch (Exception)
             {
-                // ignored
+                throw;
             }
         }
 
@@ -176,9 +185,13 @@ namespace AITestProject
         {
             Pic.Source = bi;
             // TODO get frame as emgu Image and find face
-            // var grayImage = Mat.Zeros(720, 720, 3);
-            // CvInvoke.cvCopy(bitmap.ToIplImage(), grayImage);
-            // DetectFaces(grayImage);
+            Console.WriteLine(watch.Elapsed.Seconds);
+            if (watch.Elapsed.Seconds < 1) return;
+            watch.Restart();
+            Console.WriteLine("AUSFÜHREN");
+
+            var test = bitmap.ToImage<Gray, byte>();
+            DetectFaces(test.Resize(444, 250, Inter.Linear));
         }
     }
 }
