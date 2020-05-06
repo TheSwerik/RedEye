@@ -154,7 +154,7 @@ namespace AITestProject
             var eye = new Image {Source = EyeImage};
             canvas.Children.Add(eye);
             Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
-            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2);
+            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + 4);
         }
 
         private void RadioButton_OnChecked(object sender, RoutedEventArgs e)
