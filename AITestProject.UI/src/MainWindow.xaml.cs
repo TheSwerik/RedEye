@@ -53,9 +53,6 @@ namespace AITestProject
             foreach (FilterInfo filter in _filterInfoCollection) DeviceBox.Items.Add(filter.Name);
             DeviceBox.SelectedIndex = 0;
 
-            // Init Webcam:
-            _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
-
             RadioButtonCamera.IsChecked = true;
         }
 
@@ -72,20 +69,14 @@ namespace AITestProject
 
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ClearCanvas();
             Pic.Source = _images.NextImage();
-
             var grayImage = new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>();
-            canvas.Children.Add(
-                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
-            canvas.Children.Add(
-                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
+            DrawDetection(grayImage);
         }
-
 
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
         {
-            // reset Camera:
+            // reset Camera if it exists:
             if (_camera != null && _camera.IsRunning)
             {
                 _camera.SignalToStop();
@@ -112,6 +103,15 @@ namespace AITestProject
             canvas.Children.Add(Pic);
         }
 
+        private void DrawDetection(IOutputArrayOfArrays grayImage)
+        {
+            ClearCanvas();
+            canvas.Children.Add(
+                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
+            canvas.Children.Add(
+                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
+        }
+
         //Webcam stuff:
         private void DeviceBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -131,21 +131,16 @@ namespace AITestProject
         private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             var bitmap = (Bitmap) eventArgs.Frame.Clone();
-            Dispatcher.BeginInvoke((Action) (() => WebcamNextFrame(bitmap)));
+            var bitmapImage = ImageUtil.GetBitmapImage(bitmap);
+            Dispatcher.BeginInvoke((Action) (() => WebcamNextFrame(bitmap, bitmapImage)));
         }
 
-        private void WebcamNextFrame(Bitmap bitmap)
+        private void WebcamNextFrame(Bitmap bitmap, ImageSource bitmapImage)
         {
-            Pic.Source = ImageUtil.GetBitmapImage(bitmap);
+            Pic.Source = bitmapImage;
             if (_detectionTimer.Elapsed.Seconds < 1) return;
             _detectionTimer.Restart();
-
-            var grayImage = bitmap.ToImage<Gray, byte>();
-            ClearCanvas();
-            canvas.Children.Add(
-                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
-            canvas.Children.Add(
-                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
+            DrawDetection(bitmap.ToImage<Gray, byte>());
         }
     }
 }
