@@ -23,7 +23,6 @@ namespace AITestProject
     {
         private readonly Stopwatch _detectionTimer = new Stopwatch();
 
-
         // ReSharper disable once CollectionNeverUpdated.Local
         private readonly FilterInfoCollection _filterInfoCollection;
 
@@ -56,12 +55,13 @@ namespace AITestProject
 
             // Init Webcam:
             _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
+
+            RadioButtonCamera.IsChecked = true;
         }
 
         // UI:
         private void Window_OnClosed(object sender, EventArgs e)
         {
-            Console.WriteLine("DISPOSE");
             _images.Dispose();
             if (_camera == null || !_camera.IsRunning) return;
             _camera.SignalToStop();
@@ -130,27 +130,18 @@ namespace AITestProject
 
         private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            System.Drawing.Image img = (Bitmap) eventArgs.Frame.Clone();
-
-            var ms = new MemoryStream();
-            img.Save(ms, ImageFormat.Bmp);
-            ms.Seek(0, SeekOrigin.Begin);
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.StreamSource = ms;
-            bi.EndInit();
-
-            bi.Freeze();
-            Dispatcher.BeginInvoke((Action) (() => WebcamNextFrame(bi, (Bitmap) img)));
+            var bitmap = (Bitmap) eventArgs.Frame.Clone();
+            Dispatcher.BeginInvoke((Action) (() => WebcamNextFrame(bitmap)));
         }
 
-        private void WebcamNextFrame(ImageSource bi, Bitmap bitmap)
+        private void WebcamNextFrame(Bitmap bitmap)
         {
-            Pic.Source = bi;
+            Pic.Source = ImageUtil.GetBitmapImage(bitmap);
             if (_detectionTimer.Elapsed.Seconds < 1) return;
             _detectionTimer.Restart();
 
             var grayImage = bitmap.ToImage<Gray, byte>();
+            ClearCanvas();
             canvas.Children.Add(
                 ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
             canvas.Children.Add(

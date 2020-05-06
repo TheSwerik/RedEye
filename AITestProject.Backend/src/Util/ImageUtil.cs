@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
@@ -11,15 +12,23 @@ namespace AITestProject.Util
     public static class ImageUtil
     {
         private static readonly BitmapImage EyeImage = GetBitmapImage(@"assets\redeye_texture.png");
+
         public static IEnumerable<string> GetImagePaths(string folder)
         {
             return Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories)
-                            .Where(Path.HasExtension);
+                .Where(Path.HasExtension);
         }
 
-        public static BitmapImage GetBitmapImage(string url)
+        public static Image EyeTextureImage(Rectangle rect)
         {
-            using var stream = new FileStream(url, FileMode.Open);
+            var eye = new System.Windows.Controls.Image() {Source = EyeImage};
+            Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
+            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + 4); //TODO make offset in settings
+            return eye;
+        }
+
+        private static BitmapImage GetBitmapImage(Stream stream)
+        {
             var bitmapImage = new BitmapImage();
             bitmapImage.BeginInit();
             bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
@@ -29,12 +38,18 @@ namespace AITestProject.Util
             return bitmapImage;
         }
 
-        public static  Image EyeTextureImage(Rectangle rect)
+        public static BitmapImage GetBitmapImage(string url)
         {
-            var eye = new System.Windows.Controls.Image() {Source = EyeImage};
-            Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
-            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + 4); //TODO make offset in settings
-            return eye;
+            using var stream = new FileStream(url, FileMode.Open);
+            return GetBitmapImage(stream);
+        }
+
+        public static BitmapImage GetBitmapImage(Bitmap bitmap)
+        {
+            using var stream = new MemoryStream();
+            bitmap.Save(stream, ImageFormat.Bmp);
+            stream.Seek(0, SeekOrigin.Begin);
+            return GetBitmapImage(stream);
         }
     }
 }
