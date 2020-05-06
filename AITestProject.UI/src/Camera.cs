@@ -16,6 +16,7 @@ namespace AITestProject
     {
         private readonly MainWindow _mainWindow;
         private readonly Stopwatch _detectionTimer;
+        private readonly double _updateTime;
 
         // ReSharper disable once CollectionNeverUpdated.Local
         private readonly FilterInfoCollection _filterInfoCollection;
@@ -26,6 +27,7 @@ namespace AITestProject
             _mainWindow = mainWindow;
             _detectionTimer = new Stopwatch();
             _filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            _updateTime = 1000.0 / Config.GetInt("DetectionFrequency"); // 1 second / updates per second
         }
 
         public void Start(int deviceBoxSelectedIndex)
@@ -46,7 +48,8 @@ namespace AITestProject
         private void WebcamNextFrame(Bitmap bitmap, ImageSource bitmapImage)
         {
             _mainWindow.Pic.Source = bitmapImage;
-            if (_detectionTimer.Elapsed.Seconds < 1) return;
+            var time = _detectionTimer.Elapsed.Seconds * 1000 + _detectionTimer.Elapsed.Milliseconds;
+            if (time < _updateTime) return;
             _detectionTimer.Restart();
             _mainWindow.DrawDetection(bitmap.ToImage<Gray, byte>().Resize(444, 250, Inter.Linear));
         }

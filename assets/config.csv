@@ -1,2 +1,3 @@
 ﻿StartWithCamera: true
 EyeImageVerticalOffset: 4
+DetectionFrequency: 1
