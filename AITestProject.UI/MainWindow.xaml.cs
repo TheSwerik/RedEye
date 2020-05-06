@@ -188,8 +188,6 @@ namespace AITestProject
         private void WebcameNextFrame(ImageSource bi, Bitmap bitmap)
         {
             Pic.Source = bi;
-            // TODO get frame as emgu Image and find face
-            Console.WriteLine(watch.Elapsed.Seconds);
             if (watch.Elapsed.Seconds < 1) return;
             watch.Restart();
             Console.WriteLine("AUSFÜHREN");
