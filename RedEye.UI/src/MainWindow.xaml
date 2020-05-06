@@ -36,4 +36,5 @@
 
         <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" Width="250" />
     </Grid>
+    <!-- TODO make this shit beautiful -->
 </Window>
