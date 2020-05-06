@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -36,7 +37,6 @@ namespace AITestProject
 
             // Init Images:
             _images = new EnumerableImage(@"assets\LFW");
-            NextButton_OnClick(null, null);
 
             // Init Combobox:
             _filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -66,6 +66,8 @@ namespace AITestProject
 
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
         {
+            Pic.Source = null;
+            
             // reset Camera if it exists:
             if (_camera != null && _camera.IsRunning)
             {
@@ -73,7 +75,7 @@ namespace AITestProject
                 _camera.WaitForStop();
                 _camera = null;
             }
-
+            
             NextButton_OnClick(null, null);
             NextButton.Visibility = Visibility.Visible;
         }
