@@ -12,10 +12,12 @@ namespace RedEye.Util
     public static class ImageUtil
     {
         private static readonly BitmapImage EyeImage = GetBitmapImage(@"assets\redeye_texture.png");
+        private static readonly int VOffset = Config.GetInt("EyeImageVerticalOffset");
 
         public static IEnumerable<string> GetImagePaths(string folder)
         {
-            return Directory.GetFiles(folder, "*.*", SearchOption.AllDirectories)
+            return Directory
+                .GetFiles(folder, "*.*", SearchOption.AllDirectories)
                 .Where(Path.HasExtension);
         }
 
@@ -24,20 +26,8 @@ namespace RedEye.Util
             if (rect.Equals(Rectangle.Empty)) return new Image();
             var eye = new Image {Source = EyeImage};
             Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
-            Canvas.SetTop(eye,
-                rect.Y + (rect.Height - eye.Source.Height) / 2 + Config.GetInt("EyeImageVerticalOffset"));
+            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + VOffset);
             return eye;
-        }
-
-        private static BitmapImage GetBitmapImage(Stream stream)
-        {
-            var bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.StreamSource = stream;
-            bitmapImage.EndInit();
-            bitmapImage.Freeze();
-            return bitmapImage;
         }
 
         public static BitmapImage GetBitmapImage(string url)
@@ -52,6 +42,17 @@ namespace RedEye.Util
             bitmap.Save(stream, ImageFormat.Bmp);
             stream.Seek(0, SeekOrigin.Begin);
             return GetBitmapImage(stream);
+        }
+
+        private static BitmapImage GetBitmapImage(Stream stream)
+        {
+            var bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.StreamSource = stream;
+            bitmapImage.EndInit();
+            bitmapImage.Freeze();
+            return bitmapImage;
         }
     }
 }

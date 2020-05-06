@@ -14,21 +14,22 @@ namespace RedEye
 {
     public class Camera
     {
-        private readonly Stopwatch _detectionTimer;
-
         // ReSharper disable once CollectionNeverUpdated.Local
         private readonly FilterInfoCollection _filterInfoCollection;
+        private readonly Stopwatch _detectionTimer;
         private readonly MainWindow _mainWindow;
         private readonly double _updateTime;
         private VideoCaptureDevice _camera;
 
         public Camera(MainWindow mainWindow)
         {
-            _mainWindow = mainWindow;
-            _detectionTimer = new Stopwatch();
             _filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            _detectionTimer = new Stopwatch();
+            _mainWindow = mainWindow;
             _updateTime = 1000.0 / Config.GetInt("DetectionFrequency"); // 1 second / updates per second
         }
+
+        public IEnumerable<string> GetDevices() => from FilterInfo f in _filterInfoCollection select f.Name;
 
         public void Start(int deviceBoxSelectedIndex)
         {
@@ -53,12 +54,6 @@ namespace RedEye
             _detectionTimer.Restart();
             _mainWindow.DrawDetection(bitmap.ToImage<Gray, byte>().Resize(444, 250, Inter.Linear));
         }
-
-        public IEnumerable<string> GetDevices()
-        {
-            return from FilterInfo f in _filterInfoCollection select f.Name;
-        }
-
 
         public void Dispose()
         {

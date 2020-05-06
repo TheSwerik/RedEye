@@ -9,10 +9,7 @@ namespace RedEye
     {
         private readonly IEnumerator<string> _imageEnumerator;
 
-        public EnumerableImage(string path)
-        {
-            _imageEnumerator = ImageUtil.GetImagePaths(path).GetEnumerator();
-        }
+        public EnumerableImage(string path) => _imageEnumerator = ImageUtil.GetImagePaths(path).GetEnumerator();
 
         public BitmapImage NextImage()
         {
@@ -20,15 +17,9 @@ namespace RedEye
             return ImageUtil.GetBitmapImage(CurrentImagePath());
         }
 
-        public string CurrentImagePath()
-        {
-            return _imageEnumerator.Current ??
-                   throw new ArgumentException($"no pic found {_imageEnumerator.Current}");
-        }
+        public string CurrentImagePath() => _imageEnumerator.Current ??
+                                            throw new ArgumentException($"no pic found {_imageEnumerator.Current}");
 
-        public void Dispose()
-        {
-            _imageEnumerator.Dispose();
-        }
+        public void Dispose() => _imageEnumerator.Dispose();
     }
 }
