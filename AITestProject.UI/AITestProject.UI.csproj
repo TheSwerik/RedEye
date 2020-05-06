@@ -10,44 +10,41 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!--            TODO only use this once-->
-        <None Include="$(SolutionDir)assets\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
-<!--        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />-->
-<!--        <None Include="$(SolutionDir)assets\haarcascades\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\haarcascades" />-->
-<!--        <None Include="$(SolutionDir)assets\redeye_texture.png" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />-->
+        <None Include="$(SolutionDir)assets\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" Exclude="$(SolutionDir)assets\config.csv"/>
+        <None Include="$(SolutionDir)assets\config.csv" CopyToOutputDirectory="PreserveNewest" LinkBase=""/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
-        <PackageReference Include="Emgu.CV" Version="4.2.0.3662" />
-        <PackageReference Include="Emgu.CV.runtime.windows" Version="4.2.0.3662" />
-        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662" />
-        <PackageReference Include="OpenCvSharp4" Version="4.3.0.20200421" />
-        <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.3.0.20200421" />
-        <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6" />
-        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+        <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5"/>
+        <PackageReference Include="Emgu.CV" Version="4.2.0.3662"/>
+        <PackageReference Include="Emgu.CV.runtime.windows" Version="4.2.0.3662"/>
+        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662"/>
+        <PackageReference Include="OpenCvSharp4" Version="4.3.0.20200421"/>
+        <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.3.0.20200421"/>
+        <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6"/>
+        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AITestProject.Backend\AITestProject.Backend.csproj" />
+        <ProjectReference Include="..\AITestProject.Backend\AITestProject.Backend.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ApplicationDefinition Remove="App.xaml" />
-      <ApplicationDefinition Include="src\App.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </ApplicationDefinition>
+        <ApplicationDefinition Remove="App.xaml"/>
+        <ApplicationDefinition Include="src\App.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </ApplicationDefinition>
     </ItemGroup>
 
     <ItemGroup>
-      <Page Update="src\MainWindow.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </Page>
+        <Page Update="src\MainWindow.xaml">
+            <Generator>MSBuild:Compile</Generator>
+        </Page>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\assets\haarcascades\haarcascade_eye.xml">
-        <Link>assets\haarcascades\haarcascade_eye.xml</Link>
-      </Content>
+        <Content Include="..\assets\haarcascades\haarcascade_eye.xml">
+            <Link>assets\haarcascades\haarcascade_eye.xml</Link>
+        </Content>
     </ItemGroup>
 </Project>

@@ -38,7 +38,7 @@ namespace AITestProject
             foreach (var filter in _camera.GetDevices()) DeviceBox.Items.Add(filter);
             DeviceBox.SelectedIndex = 0;
 
-            RadioButtonCamera.IsChecked = true;
+            RadioButtonImage.IsChecked = !(RadioButtonCamera.IsChecked = Config.GetBool("StartWithCamera"));
         }
 
         // UI:
