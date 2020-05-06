@@ -84,9 +84,8 @@ namespace AITestProject
 
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
-            canvas.Children.Clear();
+            ClearCanvas();
             NextImage();
-            canvas.Children.Add(Pic);
 
             var grayImage = new Mat(ImagePath()).ToImage<Gray, byte>();
             DetectFaces(grayImage);
@@ -97,17 +96,17 @@ namespace AITestProject
             if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
             var rectangles = _cascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
 
-            foreach (var rect in rectangles)
-            {
-                var rectangle = new Rectangle();
-                Canvas.SetLeft(rectangle, rect.X);
-                Canvas.SetTop(rectangle, rect.Y);
-                rectangle.Width = rect.Width;
-                rectangle.Height = rect.Height;
-                rectangle.Stroke = new SolidColorBrush() {Color = Colors.Red, Opacity = 1f};
+            ClearCanvas();
+            // Select biggest Rectangle: 
+            var rect = rectangles.OrderByDescending(r => r.Width).First();
+            var rectangle = new Rectangle();
+            Canvas.SetLeft(rectangle, rect.X);
+            Canvas.SetTop(rectangle, rect.Y);
+            rectangle.Width = rect.Width;
+            rectangle.Height = rect.Height;
+            rectangle.Stroke = new SolidColorBrush() {Color = Colors.Red, Opacity = 1f};
 
-                canvas.Children.Add(rectangle);
-            }
+            canvas.Children.Add(rectangle);
         }
 
         private void RadioButton_OnChecked(object sender, RoutedEventArgs e)
@@ -127,13 +126,18 @@ namespace AITestProject
 
         private void RadioButtonCamera_OnChecked(object sender, RoutedEventArgs e)
         {
-            canvas.Children.Clear();
             Pic.Source = null;
-            canvas.Children.Add(Pic);
+            ClearCanvas();
 
             NextButton.Visibility = Visibility.Hidden;
             DeviceBox.Visibility = StartButton.Visibility = Visibility.Visible;
             DeviceBox_OnSelectionChanged(null, null);
+        }
+
+        private void ClearCanvas()
+        {
+            canvas.Children.Clear();
+            canvas.Children.Add(Pic);
         }
 
         //Webcam stuff:
