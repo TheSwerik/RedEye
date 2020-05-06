@@ -22,8 +22,14 @@ namespace AITestProject
 {
     public partial class MainWindow : Window
     {
-        private readonly CascadeClassifier _cascadeClassifier =
+        private readonly CascadeClassifier _faceCascadeClassifier =
             new CascadeClassifier(@"assets\haarcascade_frontalface_default.xml");
+
+        private readonly CascadeClassifier _leftEyeCascadeClassifier =
+            new CascadeClassifier(@"assets\haarcascade_lefteye_2splits.xml");
+
+        private readonly CascadeClassifier _rightEyeCascadeClassifier =
+            new CascadeClassifier(@"assets\haarcascade_righteye_2splits.xml");
 
         private readonly IEnumerator<string> _enumerable;
         private readonly FilterInfoCollection _filterInfoCollection;
@@ -94,11 +100,28 @@ namespace AITestProject
         private void DetectFaces(IOutputArrayOfArrays grayImage)
         {
             if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
-            var rectangles = _cascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
+            var rectangles = _faceCascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
+            ClearCanvas();
+            DrawRectangle(rectangles);
+        }
+
+        private void DetectEyes(IOutputArrayOfArrays grayImage)
+        {
+            if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
+            var leftRectangles = _leftEyeCascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
+            var rightRectangles = _rightEyeCascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
 
             ClearCanvas();
+            DrawRectangle(leftRectangles);
+            DrawRectangle(rightRectangles);
+        }
+
+        private void DrawRectangle(System.Drawing.Rectangle[] rectangles)
+        {
             // Select biggest Rectangle: 
-            var rect = rectangles.OrderByDescending(r => r.Width).First();
+            if (rectangles.Length == 0) return;
+            // var rect = rectangles.OrderByDescending(r => r.Width).First();
+            var rect = rectangles.OrderBy(r => r.Width).First();
             var rectangle = new Rectangle();
             Canvas.SetLeft(rectangle, rect.X);
             Canvas.SetTop(rectangle, rect.Y);
@@ -154,13 +177,13 @@ namespace AITestProject
                 _camera.WaitForStop();
             }
 
-            watch.Start();
+            _detectionTimer.Start();
             _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
             _camera.NewFrame += new NewFrameEventHandler(Camera_NewFrame);
             _camera.Start();
         }
 
-        Stopwatch watch = new Stopwatch();
+        private readonly Stopwatch _detectionTimer = new Stopwatch();
 
         private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
@@ -177,7 +200,7 @@ namespace AITestProject
                 bi.EndInit();
 
                 bi.Freeze();
-                Dispatcher.BeginInvoke((Action) (() => WebcameNextFrame(bi, (Bitmap) img)));
+                Dispatcher.BeginInvoke((Action) (() => WebcamNextFrame(bi, (Bitmap) img)));
             }
             catch (Exception)
             {
@@ -185,15 +208,16 @@ namespace AITestProject
             }
         }
 
-        private void WebcameNextFrame(ImageSource bi, Bitmap bitmap)
+        private void WebcamNextFrame(ImageSource bi, Bitmap bitmap)
         {
             Pic.Source = bi;
-            if (watch.Elapsed.Seconds < 1) return;
-            watch.Restart();
+            if (_detectionTimer.Elapsed.Seconds < 1) return;
+            _detectionTimer.Restart();
             Console.WriteLine("AUSFÜHREN");
 
             var test = bitmap.ToImage<Gray, byte>();
-            DetectFaces(test.Resize(444, 250, Inter.Linear));
+            // DetectFaces(test.Resize(444, 250, Inter.Linear));
+            DetectEyes(test.Resize(444, 250, Inter.Linear));
         }
     }
 }

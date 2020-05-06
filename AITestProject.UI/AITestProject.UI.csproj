@@ -11,12 +11,10 @@
 
     <ItemGroup>
         <!--            TODO only use this once-->
-        <None Include="$(SolutionDir)assets\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
-        <None Update="..\assets\haarcascade_eye.xml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-          <LinkBase>assets</LinkBase>
-          <Link>assets\haarcascade_eye.xml</Link>
-        </None>
+        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />
+        <None Include="$(SolutionDir)assets\haarcascade_frontalface_default.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
+        <None Include="$(SolutionDir)assets\haarcascade_lefteye_2splits.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
+        <None Include="$(SolutionDir)assets\haarcascade_righteye_2splits.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
     </ItemGroup>
 
     <ItemGroup>
