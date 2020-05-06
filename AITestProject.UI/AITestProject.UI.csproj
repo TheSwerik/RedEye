@@ -11,11 +11,10 @@
 
     <ItemGroup>
         <!--            TODO only use this once-->
-        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />
-        <None Include="$(SolutionDir)assets\haarcascade_frontalface_default.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
-        <None Include="$(SolutionDir)assets\haarcascade_lefteye_2splits.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
-        <None Include="$(SolutionDir)assets\haarcascade_righteye_2splits.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
-        <None Include="$(SolutionDir)assets\redeye_texture.png" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
+        <None Include="$(SolutionDir)assets\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
+<!--        <None Include="$(SolutionDir)assets\LFW\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\LFW" />-->
+<!--        <None Include="$(SolutionDir)assets\haarcascades\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\haarcascades" />-->
+<!--        <None Include="$(SolutionDir)assets\redeye_texture.png" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />-->
     </ItemGroup>
 
     <ItemGroup>
@@ -44,5 +43,11 @@
       <Page Update="src\MainWindow.xaml">
         <Generator>MSBuild:Compile</Generator>
       </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\assets\haarcascades\haarcascade_eye.xml">
+        <Link>assets\haarcascades\haarcascade_eye.xml</Link>
+      </Content>
     </ItemGroup>
 </Project>

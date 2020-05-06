@@ -7,16 +7,12 @@ using Emgu.CV;
 
 namespace AITestProject
 {
-    public class Detector
+    public static class Detector
     {
-        private static readonly CascadeClassifier FaceCascadeClassifier =
-            new CascadeClassifier(@"assets\haarcascade_frontalface_default.xml");
-
-        private static readonly CascadeClassifier LeftEyeCascadeClassifier =
-            new CascadeClassifier(@"assets\haarcascade_lefteye_2splits.xml");
-
-        private static readonly CascadeClassifier RightEyeCascadeClassifier =
-            new CascadeClassifier(@"assets\haarcascade_righteye_2splits.xml");
+        private const string Path = @"assets\haarcascades\haarcascade_";
+        private static readonly CascadeClassifier FaceCascadeClassifier = new CascadeClassifier(Path + "frontalface_default.xml");
+        private static readonly CascadeClassifier LeftEyeCascadeClassifier = new CascadeClassifier(Path + "lefteye_2splits.xml");
+        private static readonly CascadeClassifier RightEyeCascadeClassifier = new CascadeClassifier(Path + "righteye_2splits.xml");
 
         public enum DetectionObject
         {

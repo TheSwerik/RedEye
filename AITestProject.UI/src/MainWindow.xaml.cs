@@ -23,21 +23,11 @@ namespace AITestProject
     {
         private readonly Stopwatch _detectionTimer = new Stopwatch();
 
+        private readonly EnumerableImage _images;
+
         // ReSharper disable once CollectionNeverUpdated.Local
         private readonly FilterInfoCollection _filterInfoCollection;
-
-        private readonly CascadeClassifier _faceCascadeClassifier =
-            new CascadeClassifier(@"assets\haarcascade_frontalface_default.xml");
-
-        private readonly CascadeClassifier _leftEyeCascadeClassifier =
-            new CascadeClassifier(@"assets\haarcascade_lefteye_2splits.xml");
-
-        private readonly CascadeClassifier _rightEyeCascadeClassifier =
-            new CascadeClassifier(@"assets\haarcascade_righteye_2splits.xml");
-
         private VideoCaptureDevice _camera;
-
-        private readonly EnumerableImage _images;
 
         public MainWindow()
         {
