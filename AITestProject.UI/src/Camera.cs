@@ -14,7 +14,7 @@ namespace AITestProject
 {
     public class Camera
     {
-        private MainWindow _mainWindow;
+        private readonly MainWindow _mainWindow;
         private readonly Stopwatch _detectionTimer;
 
         // ReSharper disable once CollectionNeverUpdated.Local
@@ -33,9 +33,10 @@ namespace AITestProject
             _camera = new VideoCaptureDevice(_filterInfoCollection[deviceBoxSelectedIndex].MonikerString);
             _camera.NewFrame += Camera_NewFrame;
             _camera.Start();
+            _detectionTimer.Start();
         }
 
-        public void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             var bitmap = (Bitmap) eventArgs.Frame.Clone();
             var bitmapImage = ImageUtil.GetBitmapImage(bitmap);
@@ -59,6 +60,7 @@ namespace AITestProject
             _camera.SignalToStop();
             _camera.WaitForStop();
             _camera = null;
+            _detectionTimer.Stop();
         }
     }
 }
