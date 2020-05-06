@@ -22,13 +22,8 @@ namespace AITestProject
 {
     public partial class MainWindow
     {
-        private readonly Stopwatch _detectionTimer = new Stopwatch();
-
         private readonly EnumerableImage _images;
-
-        // ReSharper disable once CollectionNeverUpdated.Local
-        private readonly FilterInfoCollection _filterInfoCollection;
-        private VideoCaptureDevice _camera;
+        private readonly Camera _camera;
 
         public MainWindow()
         {
@@ -39,8 +34,8 @@ namespace AITestProject
             _images = new EnumerableImage(@"assets\LFW");
 
             // Init Combobox:
-            _filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            foreach (FilterInfo filter in _filterInfoCollection) DeviceBox.Items.Add(filter.Name);
+            _camera = new Camera(this);
+            foreach (var filter in _camera.GetDevices()) DeviceBox.Items.Add(filter);
             DeviceBox.SelectedIndex = 0;
 
             RadioButtonCamera.IsChecked = true;
@@ -50,10 +45,7 @@ namespace AITestProject
         private void Window_OnClosed(object sender, EventArgs e)
         {
             _images.Dispose();
-            if (_camera == null || !_camera.IsRunning) return;
-            _camera.SignalToStop();
-            _camera.WaitForStop();
-            _camera = null;
+            _camera.Dispose();
             Environment.Exit(Environment.ExitCode);
         }
 
@@ -66,18 +58,9 @@ namespace AITestProject
 
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
         {
+            _camera.Dispose();
             Pic.Source = null;
-            
-            // reset Camera if it exists:
-            if (_camera != null && _camera.IsRunning)
-            {
-                _camera.SignalToStop();
-                _camera.WaitForStop();
-                _camera = null;
-            }
-            
-            Pic.Source = null;
-            
+
             NextButton_OnClick(null, null);
             NextButton.Visibility = Visibility.Visible;
         }
@@ -97,46 +80,21 @@ namespace AITestProject
             MainCanvas.Children.Add(Pic);
         }
 
-        private void DrawDetection(IOutputArrayOfArrays grayImage)
+        public void DrawDetection(IOutputArrayOfArrays grayImage)
         {
             ClearCanvas();
-            // canvas.IsHitTestVisible = false;
             MainCanvas.Children.Add(
                 ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye))
-                );
+            );
             MainCanvas.Children.Add(
                 ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
         }
 
-        //Webcam stuff:
         private void DeviceBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!RadioButtonCamera.IsChecked ?? false) return;
-            if (_camera != null && _camera.IsRunning)
-            {
-                _camera.SignalToStop();
-                _camera.WaitForStop();
-            }
-
-            _detectionTimer.Start();
-            _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
-            _camera.NewFrame += Camera_NewFrame;
-            _camera.Start();
-        }
-
-        private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
-        {
-            var bitmap = (Bitmap) eventArgs.Frame.Clone();
-            var bitmapImage = ImageUtil.GetBitmapImage(bitmap);
-            Dispatcher.BeginInvoke((Action) (() => WebcamNextFrame(bitmap, bitmapImage)));
-        }
-
-        private void WebcamNextFrame(Bitmap bitmap, ImageSource bitmapImage)
-        {
-            Pic.Source = bitmapImage;
-            if (_detectionTimer.Elapsed.Seconds < 1) return;
-            _detectionTimer.Restart();
-            DrawDetection(bitmap.ToImage<Gray, byte>().Resize(444, 250, Inter.Linear));
+            _camera.Dispose();
+            _camera.Start(DeviceBox.SelectedIndex);
         }
     }
 }
