@@ -15,6 +15,7 @@
         <None Include="$(SolutionDir)assets\haarcascade_frontalface_default.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
         <None Include="$(SolutionDir)assets\haarcascade_lefteye_2splits.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
         <None Include="$(SolutionDir)assets\haarcascade_righteye_2splits.xml" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
+        <None Include="$(SolutionDir)assets\redeye_texture.png" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
     </ItemGroup>
 
     <ItemGroup>

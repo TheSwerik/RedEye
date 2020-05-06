@@ -49,8 +49,7 @@ namespace AITestProject
             DeviceBox.SelectedIndex = 0;
 
             _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
-            Console.WriteLine(string.Join("\n", _camera.VideoCapabilities.Select(v => v.MaximumFrameRate)));
-            _camera.VideoResolution = _camera.VideoCapabilities[0];
+            // _camera.VideoResolution = _camera.VideoCapabilities[0];
         }
 
         // Helper Methods:
@@ -118,18 +117,29 @@ namespace AITestProject
 
         private void DrawRectangle(System.Drawing.Rectangle[] rectangles)
         {
-            // Select biggest Rectangle: 
             if (rectangles.Length == 0) return;
+            // Select biggest Rectangle: 
             // var rect = rectangles.OrderByDescending(r => r.Width).First();
+            // Select smallest Rectangle: 
             var rect = rectangles.OrderBy(r => r.Width).First();
             var rectangle = new Rectangle();
             Canvas.SetLeft(rectangle, rect.X);
             Canvas.SetTop(rectangle, rect.Y);
             rectangle.Width = rect.Width;
             rectangle.Height = rect.Height;
-            rectangle.Stroke = new SolidColorBrush() {Color = Colors.Red, Opacity = 1f};
+            rectangle.Stroke = new SolidColorBrush() {Color = Colors.Blue, Opacity = 1f};
+            // rectangle.Stroke = eyeBrush;
+            rectangle.Fill = eyeBrush;
 
             canvas.Children.Add(rectangle);
+            AddEyeTexture(rect);
+        }
+        private ImageBrush eyeBrush = new ImageBrush {ImageSource = new BitmapImage(new Uri(@"assets\redeye_texture.png", UriKind.Relative))};
+
+        private void AddEyeTexture(System.Drawing.Rectangle rect)
+        {
+            // Image
+            
         }
 
         private void RadioButton_OnChecked(object sender, RoutedEventArgs e)
