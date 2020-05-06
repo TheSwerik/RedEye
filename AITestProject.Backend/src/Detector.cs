@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
+using AITestProject.Util;
 using Emgu.CV;
 
 namespace AITestProject
@@ -10,9 +11,15 @@ namespace AITestProject
     public static class Detector
     {
         private const string Path = @"assets\haarcascades\haarcascade_";
-        private static readonly CascadeClassifier FaceCascadeClassifier = new CascadeClassifier(Path + "frontalface_default.xml");
-        private static readonly CascadeClassifier LeftEyeCascadeClassifier = new CascadeClassifier(Path + "lefteye_2splits.xml");
-        private static readonly CascadeClassifier RightEyeCascadeClassifier = new CascadeClassifier(Path + "righteye_2splits.xml");
+
+        private static readonly CascadeClassifier FaceCascadeClassifier =
+            new CascadeClassifier(Path + "frontalface_default.xml");
+
+        private static readonly CascadeClassifier LeftEyeCascadeClassifier =
+            new CascadeClassifier(Path + "lefteye_2splits.xml");
+
+        private static readonly CascadeClassifier RightEyeCascadeClassifier =
+            new CascadeClassifier(Path + "righteye_2splits.xml");
 
         public enum DetectionObject
         {
@@ -31,7 +38,14 @@ namespace AITestProject
                 DetectionObject.RightEye => RightEyeCascadeClassifier.DetectMultiScale(grayImage, 1.4, 0),
                 _ => throw new ArgumentOutOfRangeException(nameof(detectionObject), detectionObject, null)
             };
-            return rectangles.Length == 0 ? Rectangle.Empty : rectangles.OrderBy(r => r.Width).First();
+            if (rectangles.Length == 0) return Rectangle.Empty;
+            if (!Config.GetBool("PickAverage")) return rectangles.OrderBy(r => r.Width).First();
+            return new Rectangle(
+                (int) rectangles.Average(r => r.X),
+                (int) rectangles.Average(r => r.Y),
+                (int) rectangles.Average(r => r.Width),
+                (int) rectangles.Average(r => r.Height)
+            );
         }
 
         public static System.Windows.Shapes.Rectangle ConvertRectangle(Rectangle rect)
