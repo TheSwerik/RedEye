@@ -41,10 +41,4 @@
             <Generator>MSBuild:Compile</Generator>
         </Page>
     </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="..\assets\haarcascades\haarcascade_eye.xml">
-            <Link>assets\haarcascades\haarcascade_eye.xml</Link>
-        </Content>
-    </ItemGroup>
 </Project>
