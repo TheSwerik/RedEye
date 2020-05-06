@@ -15,6 +15,7 @@ using AForge.Video.DirectShow;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using Image = System.Windows.Controls.Image;
 using Rectangle = System.Windows.Shapes.Rectangle;
 using Size = System.Drawing.Size;
 
@@ -128,18 +129,32 @@ namespace AITestProject
             rectangle.Width = rect.Width;
             rectangle.Height = rect.Height;
             rectangle.Stroke = new SolidColorBrush() {Color = Colors.Blue, Opacity = 1f};
-            // rectangle.Stroke = eyeBrush;
-            rectangle.Fill = eyeBrush;
 
             canvas.Children.Add(rectangle);
             AddEyeTexture(rect);
         }
-        private ImageBrush eyeBrush = new ImageBrush {ImageSource = new BitmapImage(new Uri(@"assets\redeye_texture.png", UriKind.Relative))};
+
+        private ImageBrush eyeBrush = new ImageBrush {ImageSource = EyeImage};
+        private static readonly BitmapImage EyeImage = GetImage(@"assets\redeye_texture.png");
+
+        private static BitmapImage GetImage(string url)
+        {
+            using var stream = new FileStream(url, FileMode.Open);
+            var bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapImage.StreamSource = stream;
+            bitmapImage.EndInit();
+            bitmapImage.Freeze();
+            return bitmapImage;
+        }
 
         private void AddEyeTexture(System.Drawing.Rectangle rect)
         {
-            // Image
-            
+            var eye = new Image {Source = EyeImage};
+            canvas.Children.Add(eye);
+            Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
+            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2);
         }
 
         private void RadioButton_OnChecked(object sender, RoutedEventArgs e)
@@ -154,7 +169,6 @@ namespace AITestProject
 
             NextButton_OnClick(null, null);
             NextButton.Visibility = Visibility.Visible;
-            DeviceBox.Visibility = StartButton.Visibility = Visibility.Hidden;
         }
 
         private void RadioButtonCamera_OnChecked(object sender, RoutedEventArgs e)
@@ -163,7 +177,6 @@ namespace AITestProject
             ClearCanvas();
 
             NextButton.Visibility = Visibility.Hidden;
-            DeviceBox.Visibility = StartButton.Visibility = Visibility.Visible;
             DeviceBox_OnSelectionChanged(null, null);
         }
 
@@ -174,10 +187,6 @@ namespace AITestProject
         }
 
         //Webcam stuff:
-        private void btnStart_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
         private void DeviceBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!RadioButtonCamera.IsChecked ?? false) return;
@@ -197,25 +206,18 @@ namespace AITestProject
 
         private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            try
-            {
-                System.Drawing.Image img = (Bitmap) eventArgs.Frame.Clone();
+            System.Drawing.Image img = (Bitmap) eventArgs.Frame.Clone();
 
-                var ms = new MemoryStream();
-                img.Save(ms, ImageFormat.Bmp);
-                ms.Seek(0, SeekOrigin.Begin);
-                var bi = new BitmapImage();
-                bi.BeginInit();
-                bi.StreamSource = ms;
-                bi.EndInit();
+            var ms = new MemoryStream();
+            img.Save(ms, ImageFormat.Bmp);
+            ms.Seek(0, SeekOrigin.Begin);
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.StreamSource = ms;
+            bi.EndInit();
 
-                bi.Freeze();
-                Dispatcher.BeginInvoke((Action) (() => WebcamNextFrame(bi, (Bitmap) img)));
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            bi.Freeze();
+            Dispatcher.BeginInvoke((Action) (() => WebcamNextFrame(bi, (Bitmap) img)));
         }
 
         private void WebcamNextFrame(ImageSource bi, Bitmap bitmap)
@@ -223,7 +225,6 @@ namespace AITestProject
             Pic.Source = bi;
             if (_detectionTimer.Elapsed.Seconds < 1) return;
             _detectionTimer.Restart();
-            Console.WriteLine("AUSFÜHREN");
 
             var test = bitmap.ToImage<Gray, byte>();
             // DetectFaces(test.Resize(444, 250, Inter.Linear));

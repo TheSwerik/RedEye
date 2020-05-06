@@ -34,8 +34,5 @@
         </Canvas>
 
         <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" Width="250" />
-
-        <Button Grid.Column="1" Grid.Row="4" Content="Start" x:Name="StartButton" Click="btnStart_Click" Width="250"
-                Visibility="Hidden" />
     </Grid>
 </Window>
