@@ -21,6 +21,7 @@ namespace AITestProject.Util
 
         public static Image EyeTextureImage(Rectangle rect)
         {
+            if(rect.Equals(Rectangle.Empty))return new Image();
             var eye = new System.Windows.Controls.Image() {Source = EyeImage};
             Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
             Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + 4); //TODO make offset in settings

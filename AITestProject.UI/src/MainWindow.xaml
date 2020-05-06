@@ -22,14 +22,15 @@
         </Grid.RowDefinitions>
 
         <WrapPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center">
-            <RadioButton Content="Image" Margin="0 0 20 0" Checked="RadioButtonImage_OnChecked" x:Name="RadioButtobImage" />
-            <RadioButton Content="Camera" Checked="RadioButtonCamera_OnChecked" x:Name="RadioButtonCamera"/>
+            <RadioButton Content="Image" Margin="0 0 20 0" Checked="RadioButtonImage_OnChecked"
+                         x:Name="RadioButtobImage" />
+            <RadioButton Content="Camera" Checked="RadioButtonCamera_OnChecked" x:Name="RadioButtonCamera" />
         </WrapPanel>
 
         <ComboBox Grid.Column="1" Grid.Row="2" Text="Device:" x:Name="DeviceBox"
                   SelectionChanged="DeviceBox_OnSelectionChanged" />
 
-        <Canvas Grid.Column="1" Grid.Row="3" x:Name="canvas" Height="250" HorizontalAlignment="Left">
+        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" Height="250" IsHitTestVisible="False">
             <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant" Height="250" />
         </Canvas>
 

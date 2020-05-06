@@ -31,7 +31,7 @@ namespace AITestProject
                 DetectionObject.RightEye => RightEyeCascadeClassifier.DetectMultiScale(grayImage, 1.4, 0),
                 _ => throw new ArgumentOutOfRangeException(nameof(detectionObject), detectionObject, null)
             };
-            return rectangles.Length == 0 ? new Rectangle() : rectangles.OrderBy(r => r.Width).First();
+            return rectangles.Length == 0 ? Rectangle.Empty : rectangles.OrderBy(r => r.Width).First();
         }
 
         public static System.Windows.Shapes.Rectangle ConvertRectangle(Rectangle rect)

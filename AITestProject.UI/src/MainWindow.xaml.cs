@@ -76,6 +76,8 @@ namespace AITestProject
                 _camera = null;
             }
             
+            Pic.Source = null;
+            
             NextButton_OnClick(null, null);
             NextButton.Visibility = Visibility.Visible;
         }
@@ -91,16 +93,18 @@ namespace AITestProject
 
         private void ClearCanvas()
         {
-            canvas.Children.Clear();
-            canvas.Children.Add(Pic);
+            MainCanvas.Children.Clear();
+            MainCanvas.Children.Add(Pic);
         }
 
         private void DrawDetection(IOutputArrayOfArrays grayImage)
         {
             ClearCanvas();
-            canvas.Children.Add(
-                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
-            canvas.Children.Add(
+            // canvas.IsHitTestVisible = false;
+            MainCanvas.Children.Add(
+                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye))
+                );
+            MainCanvas.Children.Add(
                 ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
         }
 
@@ -132,7 +136,7 @@ namespace AITestProject
             Pic.Source = bitmapImage;
             if (_detectionTimer.Elapsed.Seconds < 1) return;
             _detectionTimer.Restart();
-            DrawDetection(bitmap.ToImage<Gray, byte>());
+            DrawDetection(bitmap.ToImage<Gray, byte>().Resize(444, 250, Inter.Linear));
         }
     }
 }
