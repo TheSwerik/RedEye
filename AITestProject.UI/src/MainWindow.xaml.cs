@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -20,18 +19,16 @@ using Image = System.Windows.Controls.Image;
 
 namespace AITestProject
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private static readonly BitmapImage EyeImage = GetImage(@"assets\redeye_texture.png");
-
         private readonly Stopwatch _detectionTimer = new Stopwatch();
 
-        private readonly IEnumerator<string> _enumerable;
+
+        // ReSharper disable once CollectionNeverUpdated.Local
+        private readonly FilterInfoCollection _filterInfoCollection;
 
         private readonly CascadeClassifier _faceCascadeClassifier =
             new CascadeClassifier(@"assets\haarcascade_frontalface_default.xml");
-
-        private readonly FilterInfoCollection _filterInfoCollection;
 
         private readonly CascadeClassifier _leftEyeCascadeClassifier =
             new CascadeClassifier(@"assets\haarcascade_lefteye_2splits.xml");
@@ -41,128 +38,54 @@ namespace AITestProject
 
         private VideoCaptureDevice _camera;
 
-        private ImageBrush eyeBrush = new ImageBrush {ImageSource = EyeImage};
-
+        private readonly EnumerableImage _images;
 
         public MainWindow()
         {
             InitializeComponent();
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            _enumerable = ImageUtil.GetImages(@"assets\LFW").GetEnumerator();
-            NextImage();
 
+            // Init Images:
+            _images = new EnumerableImage(@"assets\LFW");
+            NextButton_OnClick(null, null);
+
+            // Init Combobox:
             _filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             foreach (FilterInfo filter in _filterInfoCollection) DeviceBox.Items.Add(filter.Name);
             DeviceBox.SelectedIndex = 0;
 
+            // Init Webcam:
             _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
-            // _camera.VideoResolution = _camera.VideoCapabilities[0];
-        }
-
-        // Helper Methods:
-        private void NextImage()
-        {
-            if (!_enumerable.MoveNext()) throw new ArgumentException("This was the Last element.");
-            using var stream = new FileStream(ImagePath(), FileMode.Open);
-            var bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.StreamSource = stream;
-            bitmapImage.EndInit();
-            bitmapImage.Freeze();
-            Pic.Source = bitmapImage;
-        }
-
-        private string ImagePath()
-        {
-            return _enumerable.Current ?? throw new ArgumentException($"no pic found {_enumerable.Current}");
-        }
-
-        private void Dispose()
-        {
-            _enumerable.Dispose();
-            if (_camera == null || !_camera.IsRunning) return;
-            _camera.SignalToStop();
-            _camera.WaitForStop();
-            _camera = null;
         }
 
         // UI:
         private void Window_OnClosed(object sender, EventArgs e)
         {
-            Dispose();
+            Console.WriteLine("DISPOSE");
+            _images.Dispose();
+            if (_camera == null || !_camera.IsRunning) return;
+            _camera.SignalToStop();
+            _camera.WaitForStop();
+            _camera = null;
             Environment.Exit(Environment.ExitCode);
         }
 
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
             ClearCanvas();
-            NextImage();
+            Pic.Source = _images.NextImage();
 
-            var grayImage = new Mat(ImagePath()).ToImage<Gray, byte>();
-            DetectFaces(grayImage);
+            var grayImage = new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>();
+            canvas.Children.Add(
+                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
+            canvas.Children.Add(
+                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
         }
 
-        private void DetectFaces(IOutputArrayOfArrays grayImage)
+
+        private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
         {
-            if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
-            var rectangles = _faceCascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
-            ClearCanvas();
-            DrawRectangle(rectangles);
-        }
-
-        private void DetectEyes(IOutputArrayOfArrays grayImage)
-        {
-            if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
-            var leftRectangles = _leftEyeCascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
-            var rightRectangles = _rightEyeCascadeClassifier.DetectMultiScale(grayImage, 1.4, 0);
-
-            ClearCanvas();
-            DrawRectangle(leftRectangles);
-            DrawRectangle(rightRectangles);
-        }
-
-        private void DrawRectangle(Rectangle[] rectangles)
-        {
-            if (rectangles.Length == 0) return;
-            // Select biggest Rectangle: 
-            // var rect = rectangles.OrderByDescending(r => r.Width).First();
-            // Select smallest Rectangle: 
-            var rect = rectangles.OrderBy(r => r.Width).First();
-            var rectangle = new System.Windows.Shapes.Rectangle();
-            Canvas.SetLeft(rectangle, rect.X);
-            Canvas.SetTop(rectangle, rect.Y);
-            rectangle.Width = rect.Width;
-            rectangle.Height = rect.Height;
-            rectangle.Stroke = new SolidColorBrush {Color = Colors.Blue, Opacity = 1f};
-
-            canvas.Children.Add(rectangle);
-            AddEyeTexture(rect);
-        }
-
-        private static BitmapImage GetImage(string url)
-        {
-            using var stream = new FileStream(url, FileMode.Open);
-            var bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.StreamSource = stream;
-            bitmapImage.EndInit();
-            bitmapImage.Freeze();
-            return bitmapImage;
-        }
-
-        private void AddEyeTexture(Rectangle rect)
-        {
-            var eye = new Image {Source = EyeImage};
-            canvas.Children.Add(eye);
-            Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
-            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + 4);
-        }
-
-        private void RadioButton_OnChecked(object sender, RoutedEventArgs e)
-        {
-            if (Pic == null) return;
+            // reset Camera:
             if (_camera != null && _camera.IsRunning)
             {
                 _camera.SignalToStop();
@@ -227,9 +150,11 @@ namespace AITestProject
             if (_detectionTimer.Elapsed.Seconds < 1) return;
             _detectionTimer.Restart();
 
-            var test = bitmap.ToImage<Gray, byte>();
-            // DetectFaces(test.Resize(444, 250, Inter.Linear));
-            DetectEyes(test.Resize(444, 250, Inter.Linear));
+            var grayImage = bitmap.ToImage<Gray, byte>();
+            canvas.Children.Add(
+                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
+            canvas.Children.Add(
+                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
         }
     }
 }

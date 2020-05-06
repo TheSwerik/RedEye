@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AITestProject"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Closed="Window_OnClosed">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
         <WrapPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center">
-            <RadioButton Content="Image" Margin="0 0 20 0" Checked="RadioButton_OnChecked" IsChecked="True" />
+            <RadioButton Content="Image" Margin="0 0 20 0" Checked="RadioButtonImage_OnChecked" x:Name="RadioButtobImage" />
             <RadioButton Content="Camera" Checked="RadioButtonCamera_OnChecked" x:Name="RadioButtonCamera"/>
         </WrapPanel>
 
