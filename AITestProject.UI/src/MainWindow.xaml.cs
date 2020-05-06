@@ -17,15 +17,21 @@ using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Image = System.Windows.Controls.Image;
-using Rectangle = System.Windows.Shapes.Rectangle;
-using Size = System.Drawing.Size;
 
 namespace AITestProject
 {
     public partial class MainWindow : Window
     {
+        private static readonly BitmapImage EyeImage = GetImage(@"assets\redeye_texture.png");
+
+        private readonly Stopwatch _detectionTimer = new Stopwatch();
+
+        private readonly IEnumerator<string> _enumerable;
+
         private readonly CascadeClassifier _faceCascadeClassifier =
             new CascadeClassifier(@"assets\haarcascade_frontalface_default.xml");
+
+        private readonly FilterInfoCollection _filterInfoCollection;
 
         private readonly CascadeClassifier _leftEyeCascadeClassifier =
             new CascadeClassifier(@"assets\haarcascade_lefteye_2splits.xml");
@@ -33,10 +39,9 @@ namespace AITestProject
         private readonly CascadeClassifier _rightEyeCascadeClassifier =
             new CascadeClassifier(@"assets\haarcascade_righteye_2splits.xml");
 
-        private readonly IEnumerator<string> _enumerable;
-        private readonly FilterInfoCollection _filterInfoCollection;
-
         private VideoCaptureDevice _camera;
+
+        private ImageBrush eyeBrush = new ImageBrush {ImageSource = EyeImage};
 
 
         public MainWindow()
@@ -117,26 +122,23 @@ namespace AITestProject
             DrawRectangle(rightRectangles);
         }
 
-        private void DrawRectangle(System.Drawing.Rectangle[] rectangles)
+        private void DrawRectangle(Rectangle[] rectangles)
         {
             if (rectangles.Length == 0) return;
             // Select biggest Rectangle: 
             // var rect = rectangles.OrderByDescending(r => r.Width).First();
             // Select smallest Rectangle: 
             var rect = rectangles.OrderBy(r => r.Width).First();
-            var rectangle = new Rectangle();
+            var rectangle = new System.Windows.Shapes.Rectangle();
             Canvas.SetLeft(rectangle, rect.X);
             Canvas.SetTop(rectangle, rect.Y);
             rectangle.Width = rect.Width;
             rectangle.Height = rect.Height;
-            rectangle.Stroke = new SolidColorBrush() {Color = Colors.Blue, Opacity = 1f};
+            rectangle.Stroke = new SolidColorBrush {Color = Colors.Blue, Opacity = 1f};
 
             canvas.Children.Add(rectangle);
             AddEyeTexture(rect);
         }
-
-        private ImageBrush eyeBrush = new ImageBrush {ImageSource = EyeImage};
-        private static readonly BitmapImage EyeImage = GetImage(@"assets\redeye_texture.png");
 
         private static BitmapImage GetImage(string url)
         {
@@ -150,7 +152,7 @@ namespace AITestProject
             return bitmapImage;
         }
 
-        private void AddEyeTexture(System.Drawing.Rectangle rect)
+        private void AddEyeTexture(Rectangle rect)
         {
             var eye = new Image {Source = EyeImage};
             canvas.Children.Add(eye);
@@ -199,11 +201,9 @@ namespace AITestProject
 
             _detectionTimer.Start();
             _camera = new VideoCaptureDevice(_filterInfoCollection[DeviceBox.SelectedIndex].MonikerString);
-            _camera.NewFrame += new NewFrameEventHandler(Camera_NewFrame);
+            _camera.NewFrame += Camera_NewFrame;
             _camera.Start();
         }
-
-        private readonly Stopwatch _detectionTimer = new Stopwatch();
 
         private void Camera_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
