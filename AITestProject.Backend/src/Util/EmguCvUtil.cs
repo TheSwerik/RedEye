@@ -10,12 +10,12 @@ using Emgu.CV.Util;
 using Emgu.Util;
 using Emgu.Util.TypeEnum;
 
-namespace AITestProject
+namespace AITestProject.Util
 {
     /// <summary>
     ///     Provide extension method to convert IInputArray to and from Bitmap
     /// </summary>
-    public static class Helper
+    public static class EmguCvUtil
     {
         /// <summary>
         ///     Convert raw data to bitmap

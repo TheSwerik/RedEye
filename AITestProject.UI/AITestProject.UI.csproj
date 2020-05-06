@@ -32,4 +32,17 @@
     <ItemGroup>
         <ProjectReference Include="..\AITestProject.Backend\AITestProject.Backend.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ApplicationDefinition Remove="App.xaml" />
+      <ApplicationDefinition Include="src\App.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </ApplicationDefinition>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="src\MainWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
 </Project>

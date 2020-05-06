@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using AForge.Video;
 using AForge.Video.DirectShow;
+using AITestProject.Util;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -42,7 +43,7 @@ namespace AITestProject
         {
             InitializeComponent();
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            _enumerable = Util.GetImages(@"assets\LFW").GetEnumerator();
+            _enumerable = ImageUtil.GetImages(@"assets\LFW").GetEnumerator();
             NextImage();
 
             _filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);

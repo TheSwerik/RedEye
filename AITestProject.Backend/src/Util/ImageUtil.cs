@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 
-namespace AITestProject
+namespace AITestProject.Util
 {
-    public class Util
+    public class ImageUtil
     {
         public static IEnumerable<string> GetImages(string folder)
         {
