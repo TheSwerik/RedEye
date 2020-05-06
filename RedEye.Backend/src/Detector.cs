@@ -3,13 +3,20 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
-using AITestProject.Util;
 using Emgu.CV;
+using RedEye.Util;
 
-namespace AITestProject
+namespace RedEye
 {
     public static class Detector
     {
+        public enum DetectionObject
+        {
+            Face,
+            LeftEye,
+            RightEye
+        }
+
         private const string Path = @"assets\haarcascades\haarcascade_";
 
         private static readonly CascadeClassifier FaceCascadeClassifier =
@@ -20,13 +27,6 @@ namespace AITestProject
 
         private static readonly CascadeClassifier RightEyeCascadeClassifier =
             new CascadeClassifier(Path + "righteye_2splits.xml");
-
-        public enum DetectionObject
-        {
-            Face,
-            LeftEye,
-            RightEye
-        }
 
         public static Rectangle Detect(IOutputArrayOfArrays grayImage, DetectionObject detectionObject)
         {

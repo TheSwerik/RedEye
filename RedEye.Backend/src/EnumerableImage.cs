@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Media.Imaging;
-using AITestProject.Util;
+using RedEye.Util;
 
-namespace AITestProject
+namespace RedEye
 {
     public class EnumerableImage
     {
@@ -21,8 +20,15 @@ namespace AITestProject
             return ImageUtil.GetBitmapImage(CurrentImagePath());
         }
 
-        public string CurrentImagePath() => _imageEnumerator.Current ??
-                                            throw new ArgumentException($"no pic found {_imageEnumerator.Current}");
-        public void Dispose() => _imageEnumerator.Dispose();
+        public string CurrentImagePath()
+        {
+            return _imageEnumerator.Current ??
+                   throw new ArgumentException($"no pic found {_imageEnumerator.Current}");
+        }
+
+        public void Dispose()
+        {
+            _imageEnumerator.Dispose();
+        }
     }
 }

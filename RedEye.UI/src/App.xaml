@@ -1,7 +1,7 @@
-﻿<Application x:Class="AITestProject.App"
+﻿<Application x:Class="RedEye.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AITestProject"
+             xmlns:local="clr-namespace:RedEye"
              StartupUri="src/MainWindow.xaml">
     <Application.Resources>
 

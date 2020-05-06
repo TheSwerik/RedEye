@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualBasic.FileIO;
 
-namespace AITestProject.Util
+namespace RedEye.Util
 {
     public class Config
     {
@@ -20,9 +20,24 @@ namespace AITestProject.Util
             }
         }
 
-        public static void Set(string setting, string value) => Settings[setting] = value;
-        public static string Get(string setting) => Settings[setting];
-        public static int GetInt(string setting) => int.Parse(Settings[setting]);
-        public static bool GetBool(string setting) => bool.Parse(Settings[setting]);
+        public static void Set(string setting, string value)
+        {
+            Settings[setting] = value;
+        }
+
+        public static string Get(string setting)
+        {
+            return Settings[setting];
+        }
+
+        public static int GetInt(string setting)
+        {
+            return int.Parse(Settings[setting]);
+        }
+
+        public static bool GetBool(string setting)
+        {
+            return bool.Parse(Settings[setting]);
+        }
     }
 }

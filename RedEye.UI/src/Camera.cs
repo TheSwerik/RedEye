@@ -6,20 +6,20 @@ using System.Linq;
 using System.Windows.Media;
 using AForge.Video;
 using AForge.Video.DirectShow;
-using AITestProject.Util;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using RedEye.Util;
 
-namespace AITestProject
+namespace RedEye
 {
     public class Camera
     {
-        private readonly MainWindow _mainWindow;
         private readonly Stopwatch _detectionTimer;
-        private readonly double _updateTime;
 
         // ReSharper disable once CollectionNeverUpdated.Local
         private readonly FilterInfoCollection _filterInfoCollection;
+        private readonly MainWindow _mainWindow;
+        private readonly double _updateTime;
         private VideoCaptureDevice _camera;
 
         public Camera(MainWindow mainWindow)
@@ -54,7 +54,10 @@ namespace AITestProject
             _mainWindow.DrawDetection(bitmap.ToImage<Gray, byte>().Resize(444, 250, Inter.Linear));
         }
 
-        public IEnumerable<string> GetDevices() => from FilterInfo f in _filterInfoCollection select f.Name;
+        public IEnumerable<string> GetDevices()
+        {
+            return from FilterInfo f in _filterInfoCollection select f.Name;
+        }
 
 
         public void Dispose()

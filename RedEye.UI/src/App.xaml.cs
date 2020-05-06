@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace AITestProject
+namespace RedEye
 {
     /// <summary>
     ///     Interaction logic for App.xaml

@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Image = System.Windows.Controls.Image;
 
-namespace AITestProject.Util
+namespace RedEye.Util
 {
     public static class ImageUtil
     {
@@ -21,10 +21,11 @@ namespace AITestProject.Util
 
         public static Image EyeTextureImage(Rectangle rect)
         {
-            if(rect.Equals(Rectangle.Empty))return new Image();
-            var eye = new System.Windows.Controls.Image() {Source = EyeImage};
+            if (rect.Equals(Rectangle.Empty)) return new Image();
+            var eye = new Image {Source = EyeImage};
             Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
-            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + Config.GetInt("EyeImageVerticalOffset"));
+            Canvas.SetTop(eye,
+                rect.Y + (rect.Height - eye.Source.Height) / 2 + Config.GetInt("EyeImageVerticalOffset"));
             return eye;
         }
 

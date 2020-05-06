@@ -1,29 +1,17 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using AForge.Video;
-using AForge.Video.DirectShow;
-using AITestProject.Util;
 using Emgu.CV;
-using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using Image = System.Windows.Controls.Image;
+using RedEye.Util;
 
-namespace AITestProject
+namespace RedEye
 {
     public partial class MainWindow
     {
-        private readonly EnumerableImage _images;
         private readonly Camera _camera;
+        private readonly EnumerableImage _images;
 
         public MainWindow()
         {

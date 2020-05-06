@@ -10,7 +10,7 @@ using Emgu.CV.Util;
 using Emgu.Util;
 using Emgu.Util.TypeEnum;
 
-namespace AITestProject.Util
+namespace RedEye.Util
 {
     /// <summary>
     ///     Provide extension method to convert IInputArray to and from Bitmap

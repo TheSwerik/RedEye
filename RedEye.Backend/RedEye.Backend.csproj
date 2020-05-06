@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Library</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>AITestProject</RootNamespace>
+        <RootNamespace>RedEye</RootNamespace>
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 
