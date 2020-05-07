@@ -28,17 +28,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <RadioButton Grid.Column="0" Content="Image" x:Name="RadioButtonImage" Checked="RadioButtonImage_OnChecked" />
-            <RadioButton Grid.Column="2" Content="Camera" x:Name="RadioButtonCamera"
-                         Checked="RadioButtonCamera_OnChecked" />
+            <RadioButton Grid.Column="2" Content="Camera" x:Name="RadioButtonCam" Checked="RadioButtonCamera_OnChecked" />
         </Grid>
 
-        <ComboBox Grid.Column="1" Grid.Row="2" Text="Device:" x:Name="DeviceBox"
-                  SelectionChanged="DeviceBox_OnSelectionChanged" />
+        <ComboBox Grid.Column="1" Grid.Row="2" Text="Device:" x:Name="DeviceBox" SelectionChanged="DeviceBox_OnSelectionChanged" />
 
-        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" IsHitTestVisible="False"
-                Width="{Binding ActualWidth, ElementName=Pic, Mode=OneWay}">
-            <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant"
-                   Height="{Binding ActualHeight, ElementName=MainCanvas, Mode=OneWay}" />
+        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" IsHitTestVisible="False" Width="{Binding ActualWidth, ElementName=Pic, Mode=OneWay}">
+            <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant" Height="{Binding ActualHeight, ElementName=MainCanvas, Mode=OneWay}" />
         </Canvas>
 
         <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" />

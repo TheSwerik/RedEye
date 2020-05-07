@@ -29,7 +29,7 @@ namespace RedEye
             foreach (var filter in _camera.GetDevices()) DeviceBox.Items.Add(filter);
             DeviceBox.SelectedIndex = 0;
 
-            RadioButtonImage.IsChecked = !(RadioButtonCamera.IsChecked = Config.GetBool("StartWithCamera"));
+            RadioButtonImage.IsChecked = !(RadioButtonCam.IsChecked = Config.GetBool("StartWithCamera"));
 
             Console.WriteLine("CUDA " + (Config.IsCudaEnabled ? "On" : "Off"));
         }
@@ -63,7 +63,7 @@ namespace RedEye
 
         private void DeviceBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
-            if (!RadioButtonCamera.IsChecked ?? false) return;
+            if (!RadioButtonCam.IsChecked ?? false) return;
             _camera.Dispose();
             _camera.Start(DeviceBox.SelectedIndex);
         }
