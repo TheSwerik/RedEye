@@ -21,20 +21,26 @@
             <RowDefinition Height="1.25*" />
         </Grid.RowDefinitions>
 
-        <WrapPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center">
-            <RadioButton Content="Image" Checked="RadioButtonImage_OnChecked" x:Name="RadioButtonImage"
-                         Margin="0 0 20 0" />
-            <RadioButton Content="Camera" Checked="RadioButtonCamera_OnChecked" x:Name="RadioButtonCamera" />
-        </WrapPanel>
+        <Grid Grid.Column="1" Grid.Row="1" Margin="30 0 30 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <RadioButton Grid.Column="0" Content="Image" x:Name="RadioButtonImage" Checked="RadioButtonImage_OnChecked" />
+            <RadioButton Grid.Column="2" Content="Camera" x:Name="RadioButtonCamera" Checked="RadioButtonCamera_OnChecked"/>
+        </Grid>
 
         <ComboBox Grid.Column="1" Grid.Row="2" Text="Device:" x:Name="DeviceBox"
                   SelectionChanged="DeviceBox_OnSelectionChanged" />
 
-        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" Height="250" IsHitTestVisible="False">
-            <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant" Height="250" />
+        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" Height="250" IsHitTestVisible="False"
+                Width="{Binding ActualWidth, ElementName=Pic, Mode=OneWay}">
+            <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant"
+                   Height="{Binding ActualHeight, ElementName=MainCanvas, Mode=OneWay}" />
         </Canvas>
 
-        <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" Width="250" />
+        <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" />
     </Grid>
     <!-- TODO make this shit beautiful -->
 </Window>

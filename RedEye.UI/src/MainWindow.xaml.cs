@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using Emgu.CV;
@@ -13,7 +14,6 @@ namespace RedEye
     {
         private readonly EnumerableImage _images;
         private readonly Camera _camera;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -39,7 +39,7 @@ namespace RedEye
             Environment.Exit(Environment.ExitCode);
         }
 
-        private void NextButton_OnClick(object sender, RoutedEventArgs e)
+        private void NextButton_OnClick(object? sender, RoutedEventArgs? e)
         {
             Pic.Source = _images.NextImage();
 
@@ -50,22 +50,16 @@ namespace RedEye
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
         {
             _camera.Dispose();
-            Pic.Source = null;
-
-            NextButton_OnClick(null, null);
-            NextButton.Visibility = Visibility.Visible;
+            Dispatcher.BeginInvoke((Action) (SwitchToImage));
         }
 
         private void RadioButtonCamera_OnChecked(object sender, RoutedEventArgs e)
         {
-            Pic.Source = null;
-            ClearCanvas();
-
-            NextButton.Visibility = Visibility.Hidden;
             DeviceBox_OnSelectionChanged(null, null);
+            NextButton.Visibility = Visibility.Hidden;
         }
 
-        private void DeviceBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void DeviceBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs? e)
         {
             if (!RadioButtonCamera.IsChecked ?? false) return;
             _camera.Dispose();
@@ -100,6 +94,15 @@ namespace RedEye
                     ImageUtil.EyeTextureImage(
                         Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
             }
+        }
+
+        private void SwitchToImage()
+        {
+            Thread.Sleep(100);
+            Pic.Source = null;
+
+            NextButton_OnClick(null, null);
+            NextButton.Visibility = Visibility.Visible;
         }
     }
 }
