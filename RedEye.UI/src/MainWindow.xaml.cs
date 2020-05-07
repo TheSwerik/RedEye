@@ -42,8 +42,8 @@ namespace RedEye
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
             Pic.Source = _images.NextImage();
-            var grayImage = new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>();
-            DrawDetection(grayImage);
+            if (Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
+            else DrawDetection(new GpuMat(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>()));
         }
 
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
