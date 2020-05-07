@@ -28,7 +28,6 @@ ShowLanguageDialog=auto
 CloseApplications=yes
 CloseApplicationsFilter=*.*
 
-; Specifies a list of languages the Installer will support
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
