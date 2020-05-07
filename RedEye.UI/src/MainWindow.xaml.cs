@@ -42,7 +42,8 @@ namespace RedEye
         private void NextButton_OnClick(object sender, RoutedEventArgs e)
         {
             Pic.Source = _images.NextImage();
-            if (Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
+
+            if (!Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
             else DrawDetection(new GpuMat(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>()));
         }
 
