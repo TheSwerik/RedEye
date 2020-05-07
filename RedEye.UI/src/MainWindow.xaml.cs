@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Emgu.CV;
 using Emgu.CV.Cuda;
 using Emgu.CV.CvEnum;
@@ -44,15 +45,14 @@ namespace RedEye
         private void NextButton_OnClick(object? sender, RoutedEventArgs? e)
         {
             Pic.Source = _images.NextImage();
+            Dispatcher.BeginInvoke((Action) (DetectAsync), DispatcherPriority.ContextIdle);
 
-            if (!Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
-            else DrawDetection(new GpuMat(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>()));
         }
 
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
         {
             _camera.Dispose();
-            Dispatcher.BeginInvoke((Action) (SwitchToImage));
+            Dispatcher.BeginInvoke((Action) (SwitchToImage), DispatcherPriority.ContextIdle);
         }
 
         private void RadioButtonCamera_OnChecked(object sender, RoutedEventArgs e)
@@ -90,10 +90,8 @@ namespace RedEye
 
         public void DrawDetection(IOutputArrayOfArrays grayImage)
         {
-            // if (MainCanvas.Width < 1) MainCanvas.Width = 1;
             grayImage = ((Image<Gray, byte>) grayImage)
-                // .Resize((int) MainCanvas.Width, (int) MainCanvas.Height, Inter.Linear);
-                .Resize((int) MainCanvas.ActualWidth +1, (int) MainCanvas.ActualHeight, Inter.Linear);
+                .Resize(Math.Max((int) MainCanvas.ActualWidth, 1), (int) MainCanvas.ActualHeight, Inter.Linear);
             ClearCanvas();
 
             if (Config.IsCudaEnabled)
@@ -118,11 +116,15 @@ namespace RedEye
 
         private void SwitchToImage()
         {
-            Thread.Sleep(100);
             Pic.Source = null;
 
             NextButton_OnClick(null, null);
             NextButton.Visibility = Visibility.Visible;
+        }
+        private void DetectAsync()
+        {
+            if (!Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
+            else DrawDetection(new GpuMat(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>()));
         }
     }
 }
