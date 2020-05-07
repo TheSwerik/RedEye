@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Emgu.CV;
 using Emgu.CV.Cuda;
+using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using RedEye.Util;
 
@@ -14,6 +15,7 @@ namespace RedEye
     {
         private readonly EnumerableImage _images;
         private readonly Camera _camera;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -66,6 +68,19 @@ namespace RedEye
             _camera.Start(DeviceBox.SelectedIndex);
         }
 
+        private void Window_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var window = (Window) sender;
+            window.FontSize = window.ActualHeight / 35;
+            MainCanvas.Height = window.ActualHeight / 2;
+            RadioButtonGrid.Margin = new Thickness(
+                window.ActualHeight / 20,
+                0,
+                window.ActualHeight / 20,
+                window.ActualHeight / 100
+            );
+        }
+
         // Helper Methods:
         private void ClearCanvas()
         {
@@ -75,7 +90,12 @@ namespace RedEye
 
         public void DrawDetection(IOutputArrayOfArrays grayImage)
         {
+            // if (MainCanvas.Width < 1) MainCanvas.Width = 1;
+            grayImage = ((Image<Gray, byte>) grayImage)
+                // .Resize((int) MainCanvas.Width, (int) MainCanvas.Height, Inter.Linear);
+                .Resize((int) MainCanvas.ActualWidth +1, (int) MainCanvas.ActualHeight, Inter.Linear);
             ClearCanvas();
+
             if (Config.IsCudaEnabled)
             {
                 MainCanvas.Children.Add(

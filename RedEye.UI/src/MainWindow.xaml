@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RedEye"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Closed="Window_OnClosed">
+        Title="MainWindow" Height="450" Width="800" Closed="Window_OnClosed" SizeChanged="Window_OnSizeChanged">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -21,20 +21,21 @@
             <RowDefinition Height="1.25*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="1" Grid.Row="1" Margin="30 0 30 5">
+        <Grid Grid.Column="1" Grid.Row="1" x:Name="RadioButtonGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <RadioButton Grid.Column="0" Content="Image" x:Name="RadioButtonImage" Checked="RadioButtonImage_OnChecked" />
-            <RadioButton Grid.Column="2" Content="Camera" x:Name="RadioButtonCamera" Checked="RadioButtonCamera_OnChecked"/>
+            <RadioButton Grid.Column="2" Content="Camera" x:Name="RadioButtonCamera"
+                         Checked="RadioButtonCamera_OnChecked" />
         </Grid>
 
         <ComboBox Grid.Column="1" Grid.Row="2" Text="Device:" x:Name="DeviceBox"
                   SelectionChanged="DeviceBox_OnSelectionChanged" />
 
-        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" Height="250" IsHitTestVisible="False"
+        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" IsHitTestVisible="False"
                 Width="{Binding ActualWidth, ElementName=Pic, Mode=OneWay}">
             <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant"
                    Height="{Binding ActualHeight, ElementName=MainCanvas, Mode=OneWay}" />

@@ -60,16 +60,13 @@ namespace RedEye
             var time = _detectionTimer.Elapsed.Seconds * 1000 + _detectionTimer.Elapsed.Milliseconds;
             if (time < _updateTime) return;
             _detectionTimer.Restart();
-            //TODO make universal for all webcams
-            _mainWindow.DrawDetection(bitmap.ToImage<Gray, byte>().Resize(444, 250, Inter.Linear));
+            _mainWindow.DrawDetection(bitmap.ToImage<Gray, byte>());
         }
 
         private void WebcamNextFrameCuda(Bitmap bitmap, ImageSource bitmapImage)
         {
             _mainWindow.Pic.Source = bitmapImage;
-            //TODO make universal for all webcams
-            _mainWindow.DrawDetection(
-                new CudaImage<Gray, byte>(bitmap.ToImage<Gray, byte>().Resize(444, 250, Inter.Linear)));
+            _mainWindow.DrawDetection(new CudaImage<Gray, byte>(bitmap.ToImage<Gray, byte>()));
         }
 
         public void Dispose()
