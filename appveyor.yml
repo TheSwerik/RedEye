@@ -30,7 +30,7 @@ for:
       informational_version: '$(my_version_number)'
 
     after_test:
-      - ps: dotnet publish "-p:PublishProfile=$($env:project_name)\$($env:project_name).csproj" -c:Release -o:Publish\bin\64bit -v:m -r:win-x64   --self-contained:true -p:PublishSingleFile=false -p:PublishTrimmed=true
+      - ps: dotnet publish "-p:PublishProfile=$($env:project_name)\$($env:project_name).csproj" -c:Release -o:Publish\bin -v:m -r:win-x64 --self-contained:true -p:PublishSingleFile=false -p:PublishTrimmed=true
       - ps: '& "C:\Program Files (x86)\Inno Setup 6\iscc.exe" /qp "Inno Config.iss"'
 
     artifacts:

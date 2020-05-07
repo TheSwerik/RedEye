@@ -37,16 +37,16 @@ Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked   
 
 [Files]
-Source: "Publish\bin\64bit\*"; DestDir: "{app}\bin\64bit"; Excludes:"*.pdb;*\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
-Source: "Publish\bin\64bit\assets\config.csv"; DestDir: "{autodocs}\RedEye\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
+Source: "Publish\bin\*"; DestDir: "{app}\bin"; Excludes:"*.pdb;*\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
+Source: "Publish\bin\config.csv"; DestDir: "{autodocs}\RedEye\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\bin\64bit\{#MyAppExeName}"; Flags: createonlyiffileexists;
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\bin\64bit\{#MyAppExeName}"; Tasks: desktopicon; Flags: createonlyiffileexists;
-Name: "{app}\{#MyAppName}"; Filename: "{app}\bin\64bit\{#MyAppExeName}"; Flags: createonlyiffileexists;
+Name: "{group}\{#MyAppName}"; Filename: "{app}\bin\{#MyAppExeName}"; Flags: createonlyiffileexists;
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\bin\{#MyAppExeName}"; Tasks: desktopicon; Flags: createonlyiffileexists;
+Name: "{app}\{#MyAppName}"; Filename: "{app}\bin\{#MyAppExeName}"; Flags: createonlyiffileexists;
 
 [Run] 
-Filename: "{app}\bin\64bit\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Check: IsWin64; Flags: nowait postinstall skipifsilent
+Filename: "{app}\bin\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Check: IsWin64; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{autodocs}\RedEye\config.csv"
