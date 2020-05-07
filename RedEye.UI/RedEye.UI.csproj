@@ -17,11 +17,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
         <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662" />
-        <PackageReference Include="OpenCvSharp4" Version="4.3.0.20200421" />
-        <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.3.0.20200421" />
         <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6" />
+        <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
         <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     </ItemGroup>
 

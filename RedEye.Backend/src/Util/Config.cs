@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Emgu.CV.Cuda;
 using Microsoft.VisualBasic.FileIO;
 
 namespace RedEye.Util
@@ -7,6 +8,7 @@ namespace RedEye.Util
     {
         private const string Path = "config.csv";
         private static readonly Dictionary<string, string> Settings;
+        public static readonly bool IsCudaEnabled;
 
         static Config()
         {
@@ -18,6 +20,8 @@ namespace RedEye.Util
                 var fields = parser.ReadFields();
                 Settings.Add(fields[0], fields[1]);
             }
+
+            IsCudaEnabled = CudaInvoke.HasCuda; // TODO add setting
         }
 
         public static void Set(string setting, string value)

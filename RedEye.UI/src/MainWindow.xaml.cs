@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using Emgu.CV;
+using Emgu.CV.Cuda;
 using Emgu.CV.Structure;
 using RedEye.Util;
 
@@ -26,12 +27,15 @@ namespace RedEye
             DeviceBox.SelectedIndex = 0;
 
             RadioButtonImage.IsChecked = !(RadioButtonCamera.IsChecked = Config.GetBool("StartWithCamera"));
+
+            Console.WriteLine("CUDA " + (Config.IsCudaEnabled ? "On" : "Off"));
         }
 
         private void Window_OnClosed(object sender, EventArgs e)
         {
             _images.Dispose();
             _camera.Dispose();
+            Detector.Dispose();
             Environment.Exit(Environment.ExitCode);
         }
 
@@ -77,10 +81,24 @@ namespace RedEye
         public void DrawDetection(IOutputArrayOfArrays grayImage)
         {
             ClearCanvas();
-            MainCanvas.Children.Add(
-                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
-            MainCanvas.Children.Add(
-                ImageUtil.EyeTextureImage(Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
+            if (Config.IsCudaEnabled)
+            {
+                MainCanvas.Children.Add(
+                    ImageUtil.EyeTextureImage(
+                        Detector.DetectCuda(grayImage, Detector.DetectionObject.LeftEye)));
+                MainCanvas.Children.Add(
+                    ImageUtil.EyeTextureImage(
+                        Detector.DetectCuda(grayImage, Detector.DetectionObject.RightEye)));
+            }
+            else
+            {
+                MainCanvas.Children.Add(
+                    ImageUtil.EyeTextureImage(
+                        Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
+                MainCanvas.Children.Add(
+                    ImageUtil.EyeTextureImage(
+                        Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
+            }
         }
     }
 }
