@@ -21,7 +21,7 @@ namespace RedEye.Util
                 Settings.Add(fields[0], fields[1]);
             }
 
-            IsCudaEnabled = CudaInvoke.HasCuda; // TODO add setting
+            IsCudaEnabled = GetBool("Cuda") && CudaInvoke.HasCuda;
         }
 
         public static void Set(string setting, string value)

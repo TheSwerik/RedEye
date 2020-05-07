@@ -12,19 +12,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)assets\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" Exclude="$(SolutionDir)assets\config.csv" />
-        <None Include="$(SolutionDir)assets\config.csv" CopyToOutputDirectory="PreserveNewest" LinkBase="" />
+        <None Include="$(SolutionDir)assets\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" Exclude="$(SolutionDir)assets\config.csv"/>
+        <None Include="$(SolutionDir)assets\config.csv" CopyToOutputDirectory="PreserveNewest" LinkBase=""/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662" />
-        <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6" />
-        <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
-        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
+        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662"/>
+        <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6"/>
+        <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5"/>
+        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ApplicationDefinition Remove="App.xaml" />
+        <ApplicationDefinition Remove="App.xaml"/>
         <ApplicationDefinition Include="src\App.xaml">
             <Generator>MSBuild:Compile</Generator>
         </ApplicationDefinition>
@@ -37,6 +37,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RedEye.Backend\RedEye.Backend.csproj" />
+        <ProjectReference Include="..\RedEye.Backend\RedEye.Backend.csproj"/>
     </ItemGroup>
 </Project>
