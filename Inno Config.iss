@@ -122,8 +122,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 ; Specifies all files that will be installed, see https://jrsoftware.org/ishelp/index.php?topic=filessection
 [Files]
-Source: "Publish\bin\64bit\*"; DestDir: "{app}\bin\64bit"; Excludes:"*.pdb"; Check: Is64BitInstallMode;     Flags: ignoreversion recursesubdirs
-Source: "Publish\bin\32bit\*"; DestDir: "{app}\bin\32bit"; Excludes:"*.pdb"; Check: not Is64BitInstallMode; Flags: ignoreversion recursesubdirs solidbreak    
+Source: "Publish\bin\64bit\*"; DestDir: "{app}\bin\64bit"; Excludes:"*.pdb"; Check: Is64BitInstallMode;     Flags: ignoreversion recursesubdirs   
 ; Place all common files here, first one should be marked 'solidbreak'
 ;Source: "Readme.txt"; DestDir: "{app}"; Flags: isreadme solidbreak
 
@@ -131,22 +130,18 @@ Source: "Publish\bin\32bit\*"; DestDir: "{app}\bin\32bit"; Excludes:"*.pdb"; Che
 ; Parameters, HotKeys, WorkingDirectories etc can be specified, see https://jrsoftware.org/ishelp/index.php?topic=iconssection
 ; common Shortcut Folderconstants:  autoprograms (Prorgams Folder on Start Menu) | autoappdata | uninstallexe | autodocs (Documents Folder) | usersavedgames | autostartup | group | autodesktop
 [Icons]
-; creates Start Menu Shortcut (64 bit on x64 and 32bit on x86)
+; creates Start Menu Shortcut
 Name: "{group}\{#MyAppName}"; Filename: "{app}\bin\64bit\{#MyAppExeName}"; Flags: createonlyiffileexists;
-Name: "{group}\{#MyAppName}"; Filename: "{app}\bin\32bit\{#MyAppExeName}"; Flags: createonlyiffileexists; 
-; creates Desktop Shortcut (64 bit on x64 and 32bit on x86) 
+; creates Desktop Shortcut
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\bin\64bit\{#MyAppExeName}"; Tasks: desktopicon; Flags: createonlyiffileexists;
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\bin\32bit\{#MyAppExeName}"; Tasks: desktopicon; Flags: createonlyiffileexists; 
-; creates Shortcut in Pragrams Root Folder (64 bit on x64 and 32bit on x86) 
+; creates Shortcut in Pragrams Root Folder
 Name: "{app}\{#MyAppName}"; Filename: "{app}\bin\64bit\{#MyAppExeName}"; Flags: createonlyiffileexists;
-Name: "{app}\{#MyAppName}"; Filename: "{app}\bin\32bit\{#MyAppExeName}"; Flags: createonlyiffileexists; 
 
 ; Specifies Programs that are run after installation but before the final page of the Setup  
 ; use Flag "shellexec" when file is not directly runnable (for example .txt or a folder)
 [Run] 
 ; in this example the main exe (dependent on Platform):
 Filename: "{app}\bin\64bit\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Check: IsWin64; Flags: nowait postinstall skipifsilent
-Filename: "{app}\bin\32bit\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Check: not IsWin64; Flags: nowait postinstall skipifsilent
 
 ; Specifies Programs that are run before uninstallation
 ; use Flag "shellexec" when file is not directly runnable (for example .txt or a folder)
