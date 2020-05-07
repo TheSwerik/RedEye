@@ -9,6 +9,7 @@
         <Platforms>x64</Platforms>
         <LangVersion>8</LangVersion>
         <Nullable>enable</Nullable>
+        <AssemblyName>RedEye</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
