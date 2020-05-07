@@ -33,6 +33,7 @@ namespace RedEye
 
         public void Start(int deviceBoxSelectedIndex)
         {
+            if (deviceBoxSelectedIndex < 0 || _filterInfoCollection.Count <= deviceBoxSelectedIndex) return;
             _camera = new VideoCaptureDevice(_filterInfoCollection[deviceBoxSelectedIndex].MonikerString);
             _camera.NewFrame += Camera_NewFrame;
             _camera.Start();

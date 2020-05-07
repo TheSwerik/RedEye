@@ -5,6 +5,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>RedEye</RootNamespace>
         <UseWPF>true</UseWPF>
+        <LangVersion>8</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
