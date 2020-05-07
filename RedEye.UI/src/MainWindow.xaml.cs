@@ -22,7 +22,7 @@ namespace RedEye
             InitializeComponent();
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-            _images = new EnumerableImage(@"assets\LFW");
+            _images = new EnumerableImage(@"assets\examples");
             _camera = new Camera(this);
 
             // Init Combobox:
