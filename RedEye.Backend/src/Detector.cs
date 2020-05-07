@@ -34,7 +34,6 @@ namespace RedEye
                           };
 
             CudaClassifiers = new Dictionary<DetectionObject, CudaCascadeClassifier>();
-            // if (Config.IsCudaEnabled) return;
             if (!Config.IsCudaEnabled) return;
             CudaClassifiers.Add(DetectionObject.Face, new CudaCascadeClassifier(Path + "frontalface_default.xml"));
             CudaClassifiers.Add(DetectionObject.LeftEye, new CudaCascadeClassifier(Path + "lefteye_2splits.xml"));
