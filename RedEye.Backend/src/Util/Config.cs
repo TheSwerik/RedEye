@@ -1,19 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Emgu.CV.Cuda;
 using Microsoft.VisualBasic.FileIO;
 
 namespace RedEye.Util
 {
-    public class Config
+    public static class Config
     {
-        private const string Path = "config.csv";
         private static readonly Dictionary<string, string> Settings;
         public static readonly bool IsCudaEnabled;
 
         static Config()
         {
             Settings = new Dictionary<string, string>();
-            using var parser = new TextFieldParser(Path) {TextFieldType = FieldType.Delimited};
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\RedEye\config.csv";
+            using var parser = new TextFieldParser(path) {TextFieldType = FieldType.Delimited};
             parser.SetDelimiters(": ");
             while (!parser.EndOfData)
             {
