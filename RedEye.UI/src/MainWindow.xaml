@@ -43,5 +43,4 @@
 
         <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" />
     </Grid>
-    <!-- TODO make this shit beautiful -->
 </Window>
