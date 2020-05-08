@@ -4,7 +4,7 @@
 #define MyAppPublisher "Swerik"
 #define MyAppURL "https://github.com/TheSwerik/RedEye"   
 #define MyAppExeName "RedEye.exe"
-;#define MyAppIconName "RedEye.ico"
+#define MyAppIconName "RedEye.ico"
 
 [Setup]
 AppId={{0F48D403-E6A3-4037-8B6D-1F3D032D473A}
@@ -27,6 +27,7 @@ AllowNoIcons=yes
 ShowLanguageDialog=auto
 CloseApplications=yes
 CloseApplicationsFilter=*.*
+SetupIconFile=assets\{#MyAppIconName}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

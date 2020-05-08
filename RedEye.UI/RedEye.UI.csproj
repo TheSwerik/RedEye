@@ -11,22 +11,26 @@
         <Nullable>enable</Nullable>
         <AssemblyName>RedEye</AssemblyName>
         <ProjectGuid>{C3591D81-347D-4F3E-B3F2-7FD71441E0CA}</ProjectGuid>
+        <ApplicationIcon>$(SolutionDir)assets\RedEye.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="$(SolutionDir)assets\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" Exclude="$(SolutionDir)assets\config.csv ; $(SolutionDir)assets\LFW\** ; $(SolutionDir)assets\readme\**"/>
-        <None Include="$(SolutionDir)assets\config.csv" CopyToOutputDirectory="PreserveNewest" LinkBase=""/>
+        <None Include="$(SolutionDir)assets\examples\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\examples" />
+        <None Include="$(SolutionDir)assets\haarcascades\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\haarcascades" />
+        <None Include="$(SolutionDir)assets\redeye_texture.png" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
+        <None Include="$(SolutionDir)assets\config.csv" CopyToOutputDirectory="PreserveNewest" LinkBase="" />
+        <None Include="$(SolutionDir)assets\RedEye.ico" CopyToOutputDirectory="PreserveNewest" LinkBase="" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662"/>
-        <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6"/>
-        <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5"/>
-        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1"/>
+        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662" />
+        <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6" />
+        <PackageReference Include="AForge.Video.DirectShow" Version="2.2.5" />
+        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ApplicationDefinition Remove="App.xaml"/>
+        <ApplicationDefinition Remove="App.xaml" />
         <ApplicationDefinition Include="src\App.xaml">
             <Generator>MSBuild:Compile</Generator>
         </ApplicationDefinition>
@@ -39,6 +43,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RedEye.Backend\RedEye.Backend.csproj"/>
+        <ProjectReference Include="..\RedEye.Backend\RedEye.Backend.csproj" />
     </ItemGroup>
 </Project>
