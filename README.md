@@ -19,7 +19,7 @@ If you want to change any settings, then edit the `RedEye\config.csv` in your Do
 # Examples
 <img src="assets/readme/example_cam_1.PNG" height="300" alt="example_cam_1"/> <img src="assets/readme/example_img_1.PNG" height="300" alt="example_img_1"/>
 
-<img src="assets/readme/example_cam_1.PNG" height="300" alt="example_cam_2"/> <img src="assets/readme/example_img_2.PNG" height="300" alt="example_img_2"/>
+<img src="assets/readme/example_cam_2.PNG" height="300" alt="example_cam_2"/> <img src="assets/readme/example_img_2.PNG" height="300" alt="example_img_2"/>
 
 # Sources
 * [Emgu.CV](http://www.emgu.com/wiki/index.php/Main_Page)
