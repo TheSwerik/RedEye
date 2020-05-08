@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using Emgu.CV;
 using Emgu.CV.Cuda;
@@ -46,7 +49,6 @@ namespace RedEye
         {
             Pic.Source = _images.NextImage();
             Dispatcher.BeginInvoke((Action) (DetectAsync), DispatcherPriority.ContextIdle);
-
         }
 
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
@@ -95,6 +97,13 @@ namespace RedEye
                 .Resize(Math.Max((int) MainCanvas.ActualWidth, 1), (int) MainCanvas.ActualHeight, Inter.Linear);
             ClearCanvas();
 
+            if (Config.GetBool("DrawRectangles"))
+            {
+                var rectangles = Detector.DetectAll(grayImage, Detector.DetectionObject.LeftEye)
+                                         .Concat(Detector.DetectAll(grayImage, Detector.DetectionObject.RightEye));
+                foreach (var rectangle in rectangles) MainCanvas.Children.Add(Detector.ConvertRectangle(rectangle));
+            }
+
             if (Config.IsCudaEnabled)
             {
                 MainCanvas.Children.Add(
@@ -123,6 +132,7 @@ namespace RedEye
             NextButton.Visibility = Visibility.Visible;
             DeviceBox.Visibility = Visibility.Hidden;
         }
+
         private void DetectAsync()
         {
             if (!Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
