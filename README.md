@@ -1,7 +1,7 @@
 # RedEye   ![Build status](https://ci.appveyor.com/api/projects/status/40l1bf7fj0ceeq1u?svg=true)
 At first this was a Project for learning ML.NET but I ended up not using it at all because Emgu.CV worked way better and easier.
 
-If you want to try your own images, then place them in `bin\assets\examples` in your installation folder.
+If you want to try your own images, then place them in your Pictures folder under `RedEye\Sources`. Your saved Images will also be located there under `RedEye\Screenshots`.
 
 # Configuration
 If you want to change any settings, then edit the `RedEye\config.csv` in your Documents folder.
@@ -14,7 +14,7 @@ If you want to change any settings, then edit the `RedEye\config.csv` in your Do
 |       `PickAverage`      | Basically: It detects mutliple things as eyes and if you set this to true it will place the Meme-Texture over the average of every found eye location (I suggest `false`). `true \| false`                             |
 |     `DrawRectangles`     | Set if you want to draw rectangles over the areas where the program found your eyes (if you set this to `true`, then you probably want to lower `DetectionFrequency`). `true \| false`                                 |
 |          `Cuda`          | **DOESN'T WORK!** Set wether you want GPU acceleration. `true \| false`                                                                                                                                                 |
-|   `ScreenshotLocation`   | Set the Full-Path to a folder where you want your screenshots to be saved (Folder should exist). `Text`                                                                                                                |
+|   `ScreenshotLocation`   | Set the Full-Path to a folder where you want your screenshots to be saved (Folder should exist). `Text \| default`                                                                                                                |
 
 # Examples
 <img src="assets/readme/example_cam_1.PNG" height="465" width="646" alt="example_cam_1"/> <img src="assets/readme/example_img_1.PNG" height="465" width="263" alt="example_img_1"/>
