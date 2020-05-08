@@ -62,6 +62,8 @@ namespace RedEye
             DeviceBox_OnSelectionChanged(null, null);
             NextButton.Visibility = Visibility.Hidden;
             DeviceBox.Visibility = Visibility.Visible;
+            NextButtonRow.Height = new GridLength(0);
+            DeviceComboRow.Height = GridLength.Auto;
         }
 
         private void DeviceBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs? e)
@@ -84,42 +86,7 @@ namespace RedEye
             );
         }
 
-        private void SaveButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
-        }
-
-        private void SavePNG()
-        {
-            var bounds = VisualTreeHelper.GetDescendantBounds(MainCanvas);
-            var rtb = new RenderTargetBitmap((int) bounds.Width, (int) bounds.Height, 96d, 96d, PixelFormats.Default);
-
-            DrawingVisual dv = new DrawingVisual();
-            using (DrawingContext dc = dv.RenderOpen())
-            {
-                VisualBrush vb = new VisualBrush(MainCanvas);
-                dc.DrawRectangle(vb, null, new Rect(new Point(), bounds.Size));
-            }
-
-            rtb.Render(dv);
-            var pngEncoder = new PngBitmapEncoder();
-            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
-
-            try
-            {
-                var ms = new MemoryStream();
-                pngEncoder.Save(ms);
-                ms.Close();
-                File.WriteAllBytes(
-                    Config.Get("ScreenshotLocation") + $@"\RedEye {DateTime.Now:yyyy-MM-dd hh-mm-ss}.png",
-                    ms.ToArray());
-            }
-            catch (Exception err)
-            {
-                const string message = "Failed to Save Image:\n";
-                MessageBox.Show(message + err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+        private void SaveButton_OnClick(object sender, RoutedEventArgs e) => Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
 
         // Helper Methods:
         private void ClearCanvas()
@@ -170,12 +137,46 @@ namespace RedEye
             NextButton_OnClick(null, null);
             NextButton.Visibility = Visibility.Visible;
             DeviceBox.Visibility = Visibility.Hidden;
+            DeviceComboRow.Height = new GridLength(0);
+            NextButtonRow.Height = GridLength.Auto;
         }
 
         private void DetectAsync()
         {
             if (!Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
             else DrawDetection(new GpuMat(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>()));
+        }
+
+        private void SavePNG()
+        {
+            var bounds = VisualTreeHelper.GetDescendantBounds(MainCanvas);
+            var rtb = new RenderTargetBitmap((int) bounds.Width, (int) bounds.Height, 96d, 96d, PixelFormats.Default);
+
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext dc = dv.RenderOpen())
+            {
+                VisualBrush vb = new VisualBrush(MainCanvas);
+                dc.DrawRectangle(vb, null, new Rect(new Point(), bounds.Size));
+            }
+
+            rtb.Render(dv);
+            var pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+
+            try
+            {
+                var ms = new MemoryStream();
+                pngEncoder.Save(ms);
+                ms.Close();
+                File.WriteAllBytes(
+                    Config.Get("ScreenshotLocation") + $@"\RedEye {DateTime.Now:yyyy-MM-dd hh-mm-ss}.png",
+                    ms.ToArray());
+            }
+            catch (Exception err)
+            {
+                const string message = "Failed to Save Image:\n";
+                MessageBox.Show(message + err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
