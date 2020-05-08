@@ -1,6 +1,6 @@
 ; Variables:
 #define MyAppName "RedEye"
-#define MyAppVersion "1.2.0"
+#define MyAppVersion "1.3.0"
 #define MyAppPublisher "Swerik"
 #define MyAppURL "https://github.com/TheSwerik/RedEye"   
 #define MyAppExeName "RedEye.exe"

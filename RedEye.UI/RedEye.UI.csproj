@@ -10,6 +10,7 @@
         <LangVersion>8</LangVersion>
         <Nullable>enable</Nullable>
         <AssemblyName>RedEye</AssemblyName>
+        <ProjectGuid>{C3591D81-347D-4F3E-B3F2-7FD71441E0CA}</ProjectGuid>
     </PropertyGroup>
 
     <ItemGroup>

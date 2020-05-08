@@ -1,7 +1,8 @@
 ﻿StartWithCamera: true
-EyeImageVerticalOffset: 2
+EyeImageVerticalOffset: 4
 DetectionFrequency: 20
+Neighbors: 2
 PickAverage: false
-Cuda: false
 DrawRectangles: false
-Neighbors: 1
+Cuda: false
+ScreenshotLocation: default

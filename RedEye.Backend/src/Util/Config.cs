@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Emgu.CV.Cuda;
 using Microsoft.VisualBasic.FileIO;
 
@@ -23,6 +24,10 @@ namespace RedEye.Util
             }
 
             IsCudaEnabled = GetBool("Cuda") && CudaInvoke.HasCuda;
+
+            if (Get("ScreenshotLocation").ToLowerInvariant().Contains("default"))
+                Set("ScreenshotLocation", Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\RedEye Screenshots");
+            Directory.CreateDirectory(Get("ScreenshotLocation"));
         }
 
         public static void Set(string setting, string value)
