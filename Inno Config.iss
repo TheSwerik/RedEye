@@ -35,12 +35,9 @@ Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked   
 
-[Dirs]
-Name: "{autodocs}\RedEye"
-
 [Files]
 Source: "Publish\bin\*"; DestDir: "{app}\bin"; Excludes:"*.pdb;Publish\bin\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
-Source: "Publish\bin\config.csv"; DestDir: "{autodocs}\RedEye\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
+Source: "Publish\bin\config.csv"; DestDir: "{userdocs}\RedEye"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\bin\{#MyAppExeName}"; Flags: createonlyiffileexists;
@@ -51,4 +48,4 @@ Name: "{app}\{#MyAppName}"; Filename: "{app}\bin\{#MyAppExeName}"; Flags: create
 Filename: "{app}\bin\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Check: IsWin64; Flags: nowait postinstall skipifsilent
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{autodocs}\RedEye\config.csv"
+Type: filesandordirs; Name: "{userdocs}\RedEye\config.csv"
