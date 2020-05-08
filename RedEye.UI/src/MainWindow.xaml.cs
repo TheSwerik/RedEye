@@ -117,10 +117,12 @@ namespace RedEye
             {
                 MainCanvas.Children.Add(
                     ImageUtil.EyeTextureImage(
-                        Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
+                        Detector.Detect(grayImage, Detector.DetectionObject.LeftEye),
+                        MainCanvas.ActualWidth / 250));
                 MainCanvas.Children.Add(
                     ImageUtil.EyeTextureImage(
-                        Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
+                        Detector.Detect(grayImage, Detector.DetectionObject.RightEye),
+                        MainCanvas.ActualWidth / 250));
             }
         }
 
