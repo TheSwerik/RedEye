@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using Emgu.CV;
 using Emgu.CV.Cuda;
@@ -17,8 +14,8 @@ namespace RedEye
 {
     public partial class MainWindow
     {
-        private readonly EnumerableImage _images;
         private readonly Camera _camera;
+        private readonly EnumerableImage _images;
 
         public MainWindow()
         {
@@ -48,13 +45,13 @@ namespace RedEye
         private void NextButton_OnClick(object? sender, RoutedEventArgs? e)
         {
             Pic.Source = _images.NextImage();
-            Dispatcher.BeginInvoke((Action) (DetectAsync), DispatcherPriority.ContextIdle);
+            Dispatcher.BeginInvoke((Action) DetectAsync, DispatcherPriority.ContextIdle);
         }
 
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
         {
             _camera.Dispose();
-            Dispatcher.BeginInvoke((Action) (SwitchToImage), DispatcherPriority.ContextIdle);
+            Dispatcher.BeginInvoke((Action) SwitchToImage, DispatcherPriority.ContextIdle);
         }
 
         private void RadioButtonCamera_OnChecked(object sender, RoutedEventArgs e)

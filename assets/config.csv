@@ -1,5 +1,5 @@
 ﻿StartWithCamera: true
-EyeImageVerticalOffset: 4
+EyeImageVerticalOffset: 2
 DetectionFrequency: 20
 PickAverage: false
 Cuda: false

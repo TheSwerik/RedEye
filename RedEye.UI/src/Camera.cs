@@ -7,9 +7,7 @@ using System.Linq;
 using System.Windows.Media;
 using AForge.Video;
 using AForge.Video.DirectShow;
-using Emgu.CV;
 using Emgu.CV.Cuda;
-using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using RedEye.Util;
 
@@ -17,9 +15,10 @@ namespace RedEye
 {
     public class Camera
     {
+        private readonly Stopwatch _detectionTimer;
+
         // ReSharper disable once CollectionNeverUpdated.Local
         private readonly FilterInfoCollection _filterInfoCollection;
-        private readonly Stopwatch _detectionTimer;
         private readonly MainWindow _mainWindow;
         private readonly double _updateTime;
         private VideoCaptureDevice _camera;
@@ -33,7 +32,10 @@ namespace RedEye
             _camera = new VideoCaptureDevice();
         }
 
-        public IEnumerable<string> GetDevices() => from FilterInfo f in _filterInfoCollection select f.Name;
+        public IEnumerable<string> GetDevices()
+        {
+            return from FilterInfo f in _filterInfoCollection select f.Name;
+        }
 
         public void Start(int deviceBoxSelectedIndex)
         {

@@ -33,8 +33,10 @@
 
         <ComboBox Grid.Column="1" Grid.Row="2" Text="Device:" x:Name="DeviceBox" SelectionChanged="DeviceBox_OnSelectionChanged" />
 
-        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" IsHitTestVisible="False" Width="{Binding ActualWidth, ElementName=Pic, Mode=OneWay}" ClipToBounds="True">
-            <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant" Height="{Binding ActualHeight, ElementName=MainCanvas, Mode=OneWay}" />
+        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" IsHitTestVisible="False"
+                Width="{Binding ActualWidth, ElementName=Pic, Mode=OneWay}" ClipToBounds="True">
+            <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant"
+                   Height="{Binding ActualHeight, ElementName=MainCanvas, Mode=OneWay}" />
         </Canvas>
 
         <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" />
