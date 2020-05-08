@@ -90,24 +90,36 @@ namespace RedEye
 
         private void SavePNG()
         {
-            // Console.WriteLine(Canvas.GetLeft(Pic.) + " " + Canvas.GetRight(Pic));
-            var rtb = new RenderTargetBitmap((int) MainCanvas.ActualWidth,
-                                             (int) MainCanvas.ActualHeight,
-                                             96d, 96d,
-                                             PixelFormats.Default);
-            rtb.Render(MainCanvas);
+            Rect bounds = VisualTreeHelper.GetDescendantBounds(MainCanvas);
+            double dpi = 96d;
 
-            // var crop = new CroppedBitmap(rtb, new Int32Rect(
-            //                                  (int) Canvas.GetLeft(Pic), 
-            //                                  (int) Canvas.GetTop(Pic), 
-            //                                  (int) Pic.ActualWidth, 
-            //                                  (int) Pic.ActualHeight));
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int) bounds.Width, (int) bounds.Height, dpi, dpi,
+                                                            System.Windows.Media.PixelFormats.Default);
 
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext dc = dv.RenderOpen())
+            {
+                VisualBrush vb = new VisualBrush(MainCanvas);
+                dc.DrawRectangle(vb, null, new Rect(new Point(), bounds.Size));
+            }
+
+            rtb.Render(dv);
             BitmapEncoder pngEncoder = new PngBitmapEncoder();
             pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
 
-            using var fs = System.IO.File.OpenWrite(Config.Get("ScreenshotLocation") + @"\screenshot.png");
-            pngEncoder.Save(fs);
+            try
+            {
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+
+                pngEncoder.Save(ms);
+                ms.Close();
+
+                System.IO.File.WriteAllBytes(Config.Get("ScreenshotLocation") + @"\1.png", ms.ToArray());
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show(err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         // Helper Methods:
