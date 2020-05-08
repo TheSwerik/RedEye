@@ -149,7 +149,7 @@ namespace RedEye
 
         private void SavePNG()
         {
-            var bounds = VisualTreeHelper.GetDescendantBounds(MainCanvas);
+            var bounds = VisualTreeHelper.GetDescendantBounds(Pic);
             var rtb = new RenderTargetBitmap((int) bounds.Width, (int) bounds.Height, 96d, 96d, PixelFormats.Default);
 
             DrawingVisual dv = new DrawingVisual();
