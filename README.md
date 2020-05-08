@@ -16,6 +16,13 @@ If you want to change any settings, then edit the `RedEye\config.csv` in your Do
 |          `Cuda`          | **DOESN'T WORK!** Set wether you want GPU acceleration. `true \| false`                                                                                                                                                 |
 |   `ScreenshotLocation`   | Set the Full-Path to a folder where you want your screenshots to be saved (Folder should exist). `Text`                                                                                                                |
 
+# Examples
+![example_cam_1](assets\readme\example_cam_1.PNG)
+![example_cam_2](assets\readme\example_cam_2.PNG)
+
+![example_img_1](assets\readme\example_img_1.PNG)
+![example_img_2](assets\readme\example_img_2.PNG)
+
 # Sources
 * [Emgu.CV](http://www.emgu.com/wiki/index.php/Main_Page)
 * [Example Faces](http://vis-www.cs.umass.edu/lfw/)
