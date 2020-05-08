@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="1.25*" />
         </Grid.RowDefinitions>
 
@@ -33,12 +34,14 @@
 
         <ComboBox Grid.Column="1" Grid.Row="2" Text="Device:" x:Name="DeviceBox" SelectionChanged="DeviceBox_OnSelectionChanged" />
 
-        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" IsHitTestVisible="False"
-                Width="{Binding ActualWidth, ElementName=Pic, Mode=OneWay}" ClipToBounds="True">
+        <Canvas Grid.Column="1" Grid.Row="3" x:Name="MainCanvas" IsHitTestVisible="False" ClipToBounds="True"
+                Width="{Binding ActualWidth, ElementName=Pic, Mode=OneWay}">
             <Image x:Name="Pic" RenderOptions.BitmapScalingMode="Fant"
                    Height="{Binding ActualHeight, ElementName=MainCanvas, Mode=OneWay}" />
         </Canvas>
 
         <Button Grid.Column="1" Grid.Row="4" Content="Next" x:Name="NextButton" Click="NextButton_OnClick" />
+        
+        <Button Grid.Column="1" Grid.Row="5" Content="Save" x:Name="SaveButton" Click="SaveButton_OnClick" />
     </Grid>
 </Window>

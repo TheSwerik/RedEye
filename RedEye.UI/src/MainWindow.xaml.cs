@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Emgu.CV;
 using Emgu.CV.Cuda;
@@ -79,6 +81,33 @@ namespace RedEye
                 window.ActualHeight / 20,
                 window.ActualHeight / 100
             );
+        }
+
+        private void SaveButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
+        }
+
+        private void SavePNG()
+        {
+            // Console.WriteLine(Canvas.GetLeft(Pic.) + " " + Canvas.GetRight(Pic));
+            var rtb = new RenderTargetBitmap((int) MainCanvas.ActualWidth,
+                                             (int) MainCanvas.ActualHeight,
+                                             96d, 96d,
+                                             PixelFormats.Default);
+            rtb.Render(MainCanvas);
+
+            // var crop = new CroppedBitmap(rtb, new Int32Rect(
+            //                                  (int) Canvas.GetLeft(Pic), 
+            //                                  (int) Canvas.GetTop(Pic), 
+            //                                  (int) Pic.ActualWidth, 
+            //                                  (int) Pic.ActualHeight));
+
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+
+            using var fs = System.IO.File.OpenWrite(Config.Get("ScreenshotLocation") + @"\screenshot.png");
+            pngEncoder.Save(fs);
         }
 
         // Helper Methods:
