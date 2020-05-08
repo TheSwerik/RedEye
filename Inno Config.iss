@@ -1,6 +1,6 @@
 ; Variables:
 #define MyAppName "RedEye"
-#define MyAppVersion "1.3.1"
+#define MyAppVersion "1.3.2"
 #define MyAppPublisher "Swerik"
 #define MyAppURL "https://github.com/TheSwerik/RedEye"   
 #define MyAppExeName "RedEye.exe"
@@ -35,8 +35,11 @@ Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked   
 
+[Dirs]
+Name: "{autodocs}\RedEye"
+
 [Files]
-Source: "Publish\bin\*"; DestDir: "{app}\bin"; Excludes:"*.pdb;*\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
+Source: "Publish\bin\*"; DestDir: "{app}\bin"; Excludes:"*.pdb;Publish\bin\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
 Source: "Publish\bin\config.csv"; DestDir: "{autodocs}\RedEye\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
 
 [Icons]
