@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -90,11 +91,8 @@ namespace RedEye
 
         private void SavePNG()
         {
-            Rect bounds = VisualTreeHelper.GetDescendantBounds(MainCanvas);
-            double dpi = 96d;
-
-            RenderTargetBitmap rtb = new RenderTargetBitmap((int) bounds.Width, (int) bounds.Height, dpi, dpi,
-                                                            System.Windows.Media.PixelFormats.Default);
+            var bounds = VisualTreeHelper.GetDescendantBounds(MainCanvas);
+            var rtb = new RenderTargetBitmap((int) bounds.Width, (int) bounds.Height, 96d, 96d, PixelFormats.Default);
 
             DrawingVisual dv = new DrawingVisual();
             using (DrawingContext dc = dv.RenderOpen())
@@ -104,21 +102,22 @@ namespace RedEye
             }
 
             rtb.Render(dv);
-            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            var pngEncoder = new PngBitmapEncoder();
             pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
 
             try
             {
-                System.IO.MemoryStream ms = new System.IO.MemoryStream();
-
+                var ms = new MemoryStream();
                 pngEncoder.Save(ms);
                 ms.Close();
-
-                System.IO.File.WriteAllBytes(Config.Get("ScreenshotLocation") + @"\1.png", ms.ToArray());
+                File.WriteAllBytes(
+                    Config.Get("ScreenshotLocation") + $@"\RedEye {DateTime.Now:yyyy-MM-dd hh-mm-ss}.png",
+                    ms.ToArray());
             }
             catch (Exception err)
             {
-                MessageBox.Show(err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                const string message = "Failed to Save Image:\n";
+                MessageBox.Show(message + err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
