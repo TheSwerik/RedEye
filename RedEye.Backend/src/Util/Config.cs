@@ -26,7 +26,7 @@ namespace RedEye.Util
             IsCudaEnabled = GetBool("Cuda") && CudaInvoke.HasCuda;
 
             if (Get("ScreenshotLocation").ToLowerInvariant().Contains("default"))
-                Set("ScreenshotLocation", Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\RedEye Screenshots");
+                Set("ScreenshotLocation", Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\RedEye\Screenshots");
             Directory.CreateDirectory(Get("ScreenshotLocation"));
         }
 

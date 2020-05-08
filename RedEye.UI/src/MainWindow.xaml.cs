@@ -17,6 +17,7 @@ namespace RedEye
 {
     public partial class MainWindow
     {
+        private static readonly string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\RedEye\Sources";
         private readonly Camera _camera;
         private readonly EnumerableImage _images;
 
@@ -25,7 +26,7 @@ namespace RedEye
             InitializeComponent();
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-            _images = new EnumerableImage(@"assets\examples");
+            _images = new EnumerableImage(Path);
             _camera = new Camera(this);
 
             // Init Combobox:
