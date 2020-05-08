@@ -29,7 +29,7 @@ namespace RedEye.Util
         /// <param name="tryDataSharing">Try to create Bitmap that shares the data with the image</param>
         /// <returns>The Bitmap</returns>
         public static Bitmap RawDataToBitmap(IntPtr scan0, int step, Size size, Type srcColorType, int numberOfChannels,
-            Type srcDepthType, bool tryDataSharing = false)
+                                             Type srcDepthType, bool tryDataSharing = false)
         {
             if (tryDataSharing)
             {
@@ -94,7 +94,7 @@ namespace RedEye.Util
                 format = PixelFormat.Format24bppRgb;
             else
                 using (var m = new Mat(size.Height, size.Width, CvInvoke.GetDepthType(srcDepthType), numberOfChannels,
-                    scan0, step))
+                                       scan0, step))
                 using (var m2 = new Mat())
                 {
                     CvInvoke.CvtColor(m, m2, srcColorType, typeof(Bgr));
@@ -107,9 +107,9 @@ namespace RedEye.Util
                 ImageLockMode.WriteOnly,
                 format);
             using (var bmpMat = new Mat(size.Height, size.Width, DepthType.Cv8U, numberOfChannels, data.Scan0,
-                data.Stride))
+                                        data.Stride))
             using (var dataMat = new Mat(size.Height, size.Width, CvInvoke.GetDepthType(srcDepthType), numberOfChannels,
-                scan0, step))
+                                         scan0, step))
             {
                 if (srcDepthType == typeof(byte))
                 {
@@ -158,9 +158,9 @@ namespace RedEye.Util
                         var bmp = new Bitmap(s.Width, s.Height, PixelFormat.Format8bppIndexed);
                         bmp.Palette = GrayscalePalette;
                         var bitmapData = bmp.LockBits(new Rectangle(Point.Empty, s), ImageLockMode.WriteOnly,
-                            PixelFormat.Format8bppIndexed);
+                                                      PixelFormat.Format8bppIndexed);
                         using (var m = new Mat(s.Height, s.Width, DepthType.Cv8U, 1, bitmapData.Scan0,
-                            bitmapData.Stride))
+                                               bitmapData.Stride))
                         {
                             mat.CopyTo(m);
                         }
@@ -181,7 +181,7 @@ namespace RedEye.Util
             }
 
             return RawDataToBitmap(mat.DataPointer, mat.Step, s, colorType, mat.NumberOfChannels,
-                CvInvoke.GetDepthType(mat.Depth), true);
+                                   CvInvoke.GetDepthType(mat.Depth), true);
         }
 
 
@@ -212,8 +212,8 @@ namespace RedEye.Util
         ///     Create an Image &lt; TColor, TDepth &gt; from Bitmap
         /// </summary>
         public static Image<TColor, TDepth> ToImage<TColor, TDepth>(this Bitmap bitmap) where
-            TColor : struct, IColor
-            where TDepth : new()
+                                                                                        TColor : struct, IColor
+                                                                                        where TDepth : new()
         {
             var size = bitmap.Size;
             var image = new Image<TColor, TDepth>(size);
@@ -415,8 +415,10 @@ namespace RedEye.Util
         /// <param name="bmp">the bitmap to copy data from</param>
         /// <param name="image">The image to copy data to</param>
         private static void CopyFromBitmap<TColor, TDepth>(this Image<TColor, TDepth> image, Bitmap bmp) where
-            TColor : struct, IColor
-            where TDepth : new()
+                                                                                                         TColor : struct
+                                                                                                         , IColor
+                                                                                                         where TDepth :
+                                                                                                         new()
         {
             var data = bmp.LockBits(
                 new Rectangle(Point.Empty, bmp.Size),
@@ -448,8 +450,8 @@ namespace RedEye.Util
         ///     Image&lt;Bgra, Byte&gt;, the image data is shared between the Bitmap and the Image object.
         /// </returns>
         public static Bitmap AsBitmap<TColor, TDepth>(this Image<TColor, TDepth> image) where
-            TColor : struct, IColor
-            where TDepth : new()
+                                                                                        TColor : struct, IColor
+                                                                                        where TDepth : new()
         {
             IntPtr scan0;
             int step;
@@ -468,8 +470,8 @@ namespace RedEye.Util
         /// </remarks>
         /// <returns> This image in Bitmap format, the pixel data are copied over to the Bitmap</returns>
         public static Bitmap ToBitmap<TColor, TDepth>(this Image<TColor, TDepth> image) where
-            TColor : struct, IColor
-            where TDepth : new()
+                                                                                        TColor : struct, IColor
+                                                                                        where TDepth : new()
         {
             var typeOfColor = typeof(TColor);
             var typeofDepth = typeof(TDepth);
@@ -498,7 +500,7 @@ namespace RedEye.Util
                     format);
                 //using (Matrix<Byte> m = new Matrix<byte>(size.Height, size.Width, data.Scan0, data.Stride))
                 using (var mat = new Mat(size.Height, size.Width, DepthType.Cv8U, image.NumberOfChannels,
-                    data.Scan0, data.Stride))
+                                         data.Scan0, data.Stride))
                 {
                     image.Mat.CopyTo(mat);
                 }
@@ -522,8 +524,12 @@ namespace RedEye.Util
         /// <param name="height"> The height of the bitmap</param>
         /// <returns> This image in Bitmap format of the specific size</returns>
         public static Bitmap ToBitmap<TColor, TDepth>(this Image<TColor, TDepth> image, int width, int height) where
-            TColor : struct, IColor
-            where TDepth : new()
+                                                                                                               TColor :
+                                                                                                               struct,
+                                                                                                               IColor
+                                                                                                               where
+                                                                                                               TDepth :
+                                                                                                               new()
         {
             using (var scaledImage = image.Resize(width, height, Inter.Linear))
             {
@@ -536,15 +542,15 @@ namespace RedEye.Util
         ///     Convert the CudaImage to its equivalent Bitmap representation
         /// </summary>
         public static Bitmap ToBitmap<TColor, TDepth>(this CudaImage<TColor, TDepth> cudaImage) where
-            TColor : struct, IColor
-            where TDepth : new()
+                                                                                                TColor : struct, IColor
+                                                                                                where TDepth : new()
         {
             if (typeof(TColor) == typeof(Bgr) && typeof(TDepth) == typeof(byte))
             {
                 var s = cudaImage.Size;
                 var result = new Bitmap(s.Width, s.Height, PixelFormat.Format24bppRgb);
                 var data = result.LockBits(new Rectangle(Point.Empty, result.Size),
-                    ImageLockMode.WriteOnly, result.PixelFormat);
+                                           ImageLockMode.WriteOnly, result.PixelFormat);
                 using (var tmp = new Image<TColor, TDepth>(s.Width, s.Height, data.Stride, data.Scan0)
                 )
                 {
@@ -588,7 +594,8 @@ namespace RedEye.Util
         /// <param name="rTable">Lookup table for the R channel</param>
         /// <param name="aTable">Lookup table for the A channel</param>
         public static void ColorPaletteToLookupTable(ColorPalette palette, out Matrix<byte> bTable,
-            out Matrix<byte> gTable, out Matrix<byte> rTable, out Matrix<byte> aTable)
+                                                     out Matrix<byte> gTable, out Matrix<byte> rTable,
+                                                     out Matrix<byte> aTable)
         {
             bTable = new Matrix<byte>(256, 1);
             gTable = new Matrix<byte>(256, 1);

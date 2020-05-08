@@ -43,7 +43,7 @@ namespace RedEye
         public static Rectangle Detect(IOutputArrayOfArrays grayImage, DetectionObject detectionObject)
         {
             if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
-            var rectangles = Classifiers[detectionObject].DetectMultiScale(grayImage, 1.4, 0);
+            var rectangles = Classifiers[detectionObject].DetectMultiScale(grayImage, 1.4, Config.GetInt("Neighbors"));
             if (rectangles.Length == 0) return Rectangle.Empty;
             if (!Config.GetBool("PickAverage")) return rectangles.OrderBy(r => r.Width).First();
             return new Rectangle(
@@ -52,6 +52,12 @@ namespace RedEye
                 (int) rectangles.Average(r => r.Width),
                 (int) rectangles.Average(r => r.Height)
             );
+        }
+
+        public static IEnumerable<Rectangle> DetectAll(IOutputArrayOfArrays grayImage, DetectionObject detectionObject)
+        {
+            if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
+            return Classifiers[detectionObject].DetectMultiScale(grayImage, 1.4, Config.GetInt("Neighbors"));
         }
 
         public static Rectangle DetectCuda(IOutputArrayOfArrays grayImage, DetectionObject detectionObject)
@@ -72,6 +78,13 @@ namespace RedEye
             );
         }
 
+        public static void Dispose()
+        {
+            foreach (var classifier in Classifiers.Values) classifier.Dispose();
+            foreach (var classifier in CudaClassifiers.Values) classifier.Dispose();
+        }
+
+        // Helper:
         public static System.Windows.Shapes.Rectangle ConvertRectangle(Rectangle rect)
         {
             var rectangle = new System.Windows.Shapes.Rectangle();
@@ -81,12 +94,6 @@ namespace RedEye
             rectangle.Height = rect.Height;
             rectangle.Stroke = new SolidColorBrush {Color = Colors.Blue, Opacity = 1f};
             return rectangle;
-        }
-
-        public static void Dispose()
-        {
-            foreach (var classifier in Classifiers.Values) classifier.Dispose();
-            foreach (var classifier in CudaClassifiers.Values) classifier.Dispose();
         }
     }
 }

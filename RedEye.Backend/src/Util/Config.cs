@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Emgu.CV.Cuda;
 using Microsoft.VisualBasic.FileIO;
 

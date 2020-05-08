@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using System.Threading;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -14,8 +14,8 @@ namespace RedEye
 {
     public partial class MainWindow
     {
-        private readonly EnumerableImage _images;
         private readonly Camera _camera;
+        private readonly EnumerableImage _images;
 
         public MainWindow()
         {
@@ -45,14 +45,13 @@ namespace RedEye
         private void NextButton_OnClick(object? sender, RoutedEventArgs? e)
         {
             Pic.Source = _images.NextImage();
-            Dispatcher.BeginInvoke((Action) (DetectAsync), DispatcherPriority.ContextIdle);
-
+            Dispatcher.BeginInvoke((Action) DetectAsync, DispatcherPriority.ContextIdle);
         }
 
         private void RadioButtonImage_OnChecked(object sender, RoutedEventArgs e)
         {
             _camera.Dispose();
-            Dispatcher.BeginInvoke((Action) (SwitchToImage), DispatcherPriority.ContextIdle);
+            Dispatcher.BeginInvoke((Action) SwitchToImage, DispatcherPriority.ContextIdle);
         }
 
         private void RadioButtonCamera_OnChecked(object sender, RoutedEventArgs e)
@@ -95,6 +94,13 @@ namespace RedEye
                 .Resize(Math.Max((int) MainCanvas.ActualWidth, 1), (int) MainCanvas.ActualHeight, Inter.Linear);
             ClearCanvas();
 
+            if (Config.GetBool("DrawRectangles"))
+            {
+                var rectangles = Detector.DetectAll(grayImage, Detector.DetectionObject.LeftEye)
+                                         .Concat(Detector.DetectAll(grayImage, Detector.DetectionObject.RightEye));
+                foreach (var rectangle in rectangles) MainCanvas.Children.Add(Detector.ConvertRectangle(rectangle));
+            }
+
             if (Config.IsCudaEnabled)
             {
                 MainCanvas.Children.Add(
@@ -108,10 +114,12 @@ namespace RedEye
             {
                 MainCanvas.Children.Add(
                     ImageUtil.EyeTextureImage(
-                        Detector.Detect(grayImage, Detector.DetectionObject.LeftEye)));
+                        Detector.Detect(grayImage, Detector.DetectionObject.LeftEye),
+                        MainCanvas.ActualWidth / 250));
                 MainCanvas.Children.Add(
                     ImageUtil.EyeTextureImage(
-                        Detector.Detect(grayImage, Detector.DetectionObject.RightEye)));
+                        Detector.Detect(grayImage, Detector.DetectionObject.RightEye),
+                        MainCanvas.ActualWidth / 250));
             }
         }
 
@@ -123,6 +131,7 @@ namespace RedEye
             NextButton.Visibility = Visibility.Visible;
             DeviceBox.Visibility = Visibility.Hidden;
         }
+
         private void DetectAsync()
         {
             if (!Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());

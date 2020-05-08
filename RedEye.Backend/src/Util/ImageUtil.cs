@@ -17,16 +17,17 @@ namespace RedEye.Util
         public static IEnumerable<string> GetImagePaths(string folder)
         {
             return Directory
-                .GetFiles(folder, "*.*", SearchOption.AllDirectories)
-                .Where(Path.HasExtension);
+                   .GetFiles(folder, "*.*", SearchOption.AllDirectories)
+                   .Where(Path.HasExtension);
         }
 
-        public static Image EyeTextureImage(Rectangle rect)
+        public static Image EyeTextureImage(Rectangle rect, double scale = 1)
         {
             if (rect.Equals(Rectangle.Empty)) return new Image();
-            var eye = new Image {Source = EyeImage};
-            Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
-            Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + VOffset);
+            var width = scale * 300;
+            var eye = new Image {Source = EyeImage, Width = width};
+            Canvas.SetLeft(eye, rect.X + (rect.Width - width) / 2);
+            Canvas.SetTop(eye, rect.Y + (rect.Height - width) / 2 + VOffset * scale);
             return eye;
         }
 
