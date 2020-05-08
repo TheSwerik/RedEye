@@ -17,9 +17,9 @@ If you want to change any settings, then edit the `RedEye\config.csv` in your Do
 |   `ScreenshotLocation`   | Set the Full-Path to a folder where you want your screenshots to be saved (Folder should exist). `Text`                                                                                                                |
 
 # Examples
-<img src="assets/readme/example_cam_1.PNG" height="465" width="637" alt="example_cam_1"/> <img src="assets/readme/example_img_1.PNG" height="465" width="263" alt="example_img_1"/>
+<img src="assets/readme/example_cam_1.PNG" height="465" width="639" alt="example_cam_1"/> <img src="assets/readme/example_img_1.PNG" height="465" width="263" alt="example_img_1"/>
 
-<img src="assets/readme/example_cam_2.PNG" height="465" width="637" alt="example_cam_2"/> <img src="assets/readme/example_img_2.PNG" height="465" width="263" alt="example_img_2"/>
+<img src="assets/readme/example_cam_2.PNG" height="465" width="639" alt="example_cam_2"/> <img src="assets/readme/example_img_2.PNG" height="465" width="263" alt="example_img_2"/>
 
 # Sources
 * [Emgu.CV](http://www.emgu.com/wiki/index.php/Main_Page)
