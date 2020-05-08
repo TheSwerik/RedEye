@@ -59,6 +59,7 @@ namespace RedEye
         {
             DeviceBox_OnSelectionChanged(null, null);
             NextButton.Visibility = Visibility.Hidden;
+            DeviceBox.Visibility = Visibility.Visible;
         }
 
         private void DeviceBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs? e)
@@ -120,6 +121,7 @@ namespace RedEye
 
             NextButton_OnClick(null, null);
             NextButton.Visibility = Visibility.Visible;
+            DeviceBox.Visibility = Visibility.Hidden;
         }
         private void DetectAsync()
         {

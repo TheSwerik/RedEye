@@ -27,7 +27,6 @@ namespace RedEye.Util
             var eye = new Image {Source = EyeImage};
             Canvas.SetLeft(eye, rect.X + (rect.Width - eye.Source.Width) / 2);
             Canvas.SetTop(eye, rect.Y + (rect.Height - eye.Source.Height) / 2 + VOffset);
-            // TODO bind size to windowsize
             return eye;
         }
 
