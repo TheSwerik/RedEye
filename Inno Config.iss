@@ -28,17 +28,22 @@ ShowLanguageDialog=auto
 CloseApplications=yes
 CloseApplicationsFilter=*.*
 SetupIconFile=assets\{#MyAppIconName}
+UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked   
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked  
+ 
+[Dirs]
+Name: "{app}\bin\assets"; Permissions: users-modify
 
 [Files]
-Source: "Publish\bin\*"; DestDir: "{app}\bin"; Excludes:"*.pdb;Publish\bin\config.csv"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
-Source: "Publish\bin\config.csv"; DestDir: "{userdocs}\RedEye"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
+Source: "Publish\bin\*"; DestDir: "{app}\bin"; Excludes:"*.pdb;Publish\bin\config.csv;Publish\bin\assets\examples\*"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
+Source: "Publish\bin\config.csv"; DestDir: "{userdocs}\{#MyAppName}"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
+Source: "Publish\bin\assets\examples\*"; DestDir: "{userdocs}\..\Pictures\{#MyAppName}\Sources\examples"; Check: Is64BitInstallMode; Flags: ignoreversion recursesubdirs   
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\bin\{#MyAppExeName}"; Flags: createonlyiffileexists;
