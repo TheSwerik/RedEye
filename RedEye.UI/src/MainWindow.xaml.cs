@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -6,18 +7,22 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using Emgu.CV;
 using Emgu.CV.Cuda;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using RedEye.Util;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace RedEye
 {
     public partial class MainWindow
     {
-        private static readonly string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\RedEye\Sources";
+        private static readonly string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) +
+                                              @"\RedEye\Sources";
+
         private readonly Camera _camera;
         private readonly EnumerableImage _images;
 
@@ -87,7 +92,8 @@ namespace RedEye
             );
         }
 
-        private void SaveButton_OnClick(object sender, RoutedEventArgs e) => Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
+        private void SaveButton_OnClick(object sender, RoutedEventArgs e) =>
+            Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
 
         // Helper Methods:
         private void ClearCanvas()
@@ -104,12 +110,21 @@ namespace RedEye
 
             if (Config.GetBool("DrawRectangles"))
             {
-                var rectangles = Detector.DetectAll(grayImage, Detector.DetectionObject.LeftEye)
+                IEnumerable<Rectangle> rectangles;
+                if (Config.GetBool("Face")) rectangles = Detector.DetectAll(grayImage, Detector.DetectionObject.Face);
+                else
+                    rectangles = Detector.DetectAll(grayImage, Detector.DetectionObject.LeftEye)
                                          .Concat(Detector.DetectAll(grayImage, Detector.DetectionObject.RightEye));
                 foreach (var rectangle in rectangles) MainCanvas.Children.Add(Detector.ConvertRectangle(rectangle));
             }
 
-            if (Config.IsCudaEnabled)
+            if (Config.GetBool("Face"))
+            {
+                MainCanvas.Children.Add(
+                    Detector.ConvertRectangle(Detector.Detect(grayImage, Detector.DetectionObject.Face))
+                );
+            }
+            else if (Config.IsCudaEnabled)
             {
                 MainCanvas.Children.Add(
                     ImageUtil.EyeTextureImage(

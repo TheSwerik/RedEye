@@ -4,5 +4,6 @@ DetectionFrequency: 20
 Neighbors: 2
 PickAverage: false
 DrawRectangles: false
+Face: false
 Cuda: false
 ScreenshotLocation: default
