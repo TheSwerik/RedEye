@@ -1,5 +1,5 @@
 ﻿environment:
-  my_version_number: 1.4.0         # DONT FORGET TO CHANGE IS IN THE ISS FILE
+  my_version_number: 1.4.1         # DONT FORGET TO CHANGE IS IN THE ISS FILE
   application_name: RedEye         # DONT FORGET TO CHANGE IS IN THE ISS FILE
   project_name: RedEye.UI
 

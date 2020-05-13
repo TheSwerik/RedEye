@@ -20,8 +20,7 @@ namespace RedEye
 {
     public partial class MainWindow
     {
-        private static readonly string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) +
-                                              @"\RedEye\Sources";
+        private static readonly string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\RedEye\Sources";
 
         private readonly Camera _camera;
         private readonly EnumerableImage _images;
@@ -92,8 +91,7 @@ namespace RedEye
             );
         }
 
-        private void SaveButton_OnClick(object sender, RoutedEventArgs e) =>
-            Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
+        private void SaveButton_OnClick(object sender, RoutedEventArgs e) => Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
 
         // Helper Methods:
         private void ClearCanvas()
