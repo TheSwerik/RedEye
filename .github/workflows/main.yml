@@ -1,4 +1,4 @@
-name: Release
+name: CI
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
       
-  package:
+  release:
     runs-on: windows-latest
 
     steps:
@@ -40,6 +40,28 @@ jobs:
       
     - name: Publish
       run: dotnet publish "-p:PublishProfile=$($env:project_name)\$($env:project_name).csproj" -c:Release -o:Publish\bin -v:m -r:win-x64 --self-contained:true -p:PublishSingleFile=false -p:PublishTrimmed=true
-    
+
     - name: Create Installer
       run: iscc /qp "Inno Config.iss"
+
+    - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: ./Installer/RedEye.exe
+        asset_name: RedEye.exe
+        asset_content_type: application/exe
