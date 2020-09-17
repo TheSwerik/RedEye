@@ -78,7 +78,9 @@ namespace RedEye
             if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
 
             using CudaImage<Gray, byte> img = new CudaImage<Gray, byte>();
+            Console.WriteLine("Freeze Here:");
             CudaClassifiers[detectionObject].DetectMultiScale(grayImage, img);
+            Console.WriteLine("We made it..");
             var rectangles = CudaClassifiers[detectionObject].Convert(img);
 
             if (rectangles.Length == 0) return Rectangle.Empty;
