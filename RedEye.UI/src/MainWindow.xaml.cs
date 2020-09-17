@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -7,20 +8,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using Emgu.CV;
 using Emgu.CV.Cuda;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using RedEye.Util;
-using Rectangle = System.Drawing.Rectangle;
+using Point = System.Windows.Point;
 
 namespace RedEye
 {
     public partial class MainWindow
     {
-        private static readonly string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) + @"\RedEye\Sources";
+        private static readonly string Path = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) +
+                                              @"\RedEye\Sources";
 
         private readonly Camera _camera;
         private readonly EnumerableImage _images;
@@ -91,7 +92,10 @@ namespace RedEye
             );
         }
 
-        private void SaveButton_OnClick(object sender, RoutedEventArgs e) => Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
+        private void SaveButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action) SavePNG, DispatcherPriority.ContextIdle);
+        }
 
         // Helper Methods:
         private void ClearCanvas()
@@ -124,12 +128,15 @@ namespace RedEye
             }
             else if (Config.IsCudaEnabled)
             {
+                var mat = new GpuMat<byte>(grayImage);
+                var image = new CudaImage<Gray, byte>();
+                mat.ConvertTo(image, DepthType.Cv8U);
                 MainCanvas.Children.Add(
                     ImageUtil.EyeTextureImage(
-                        Detector.DetectCuda(grayImage, Detector.DetectionObject.LeftEye)));
+                        Detector.DetectCuda(image, Detector.DetectionObject.LeftEye)));
                 MainCanvas.Children.Add(
                     ImageUtil.EyeTextureImage(
-                        Detector.DetectCuda(grayImage, Detector.DetectionObject.RightEye)));
+                        Detector.DetectCuda(image, Detector.DetectionObject.RightEye)));
             }
             else
             {
@@ -158,7 +165,7 @@ namespace RedEye
         private void DetectAsync()
         {
             if (!Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
-            else DrawDetection(new GpuMat(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>()));
+            else DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
         }
 
         private void SavePNG()
@@ -189,7 +196,7 @@ namespace RedEye
             catch (Exception err)
             {
                 const string message = "Failed to Save Image:\n";
-                MessageBox.Show(message + err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(message + err, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
