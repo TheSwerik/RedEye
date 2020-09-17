@@ -17,6 +17,7 @@
     <ItemGroup>
         <None Include="$(SolutionDir)assets\examples\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\examples" />
         <None Include="$(SolutionDir)assets\haarcascades\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\haarcascades" />
+        <None Include="$(SolutionDir)assets\haarcascades\CUDA\**" CopyToOutputDirectory="PreserveNewest" LinkBase="assets\haarcascades\CUDA" />
         <None Include="$(SolutionDir)assets\redeye_texture.png" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
         <None Include="$(SolutionDir)assets\config.csv" CopyToOutputDirectory="PreserveNewest" LinkBase="" />
         <None Include="$(SolutionDir)assets\RedEye.ico" CopyToOutputDirectory="PreserveNewest" LinkBase="" />
