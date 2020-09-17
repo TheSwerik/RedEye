@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Emgu.CV;
 using Emgu.CV.Cuda;
+using Emgu.CV.Structure;
 using RedEye.Util;
 
 namespace RedEye
@@ -19,7 +20,7 @@ namespace RedEye
             RightEye
         }
 
-        private const string Path = @"assets\haarcascades\haarcascade_";
+        private const string Path = @"assets\haarcascades\";
 
         private static readonly Dictionary<DetectionObject, CascadeClassifier> Classifiers;
         private static readonly Dictionary<DetectionObject, CudaCascadeClassifier> CudaClassifiers;
@@ -28,16 +29,28 @@ namespace RedEye
         {
             Classifiers = new Dictionary<DetectionObject, CascadeClassifier>
                           {
-                              {DetectionObject.Face, new CascadeClassifier(Path + "frontalface_default.xml")},
-                              {DetectionObject.LeftEye, new CascadeClassifier(Path + "lefteye_2splits.xml")},
-                              {DetectionObject.RightEye, new CascadeClassifier(Path + "righteye_2splits.xml")}
+                              {
+                                  DetectionObject.Face,
+                                  new CascadeClassifier(Path + "haarcascade_frontalface_default.xml")
+                              },
+                              {
+                                  DetectionObject.LeftEye,
+                                  new CascadeClassifier(Path + "haarcascade_lefteye_2splits.xml")
+                              },
+                              {
+                                  DetectionObject.RightEye,
+                                  new CascadeClassifier(Path + "haarcascade_righteye_2splits.xml")
+                              }
                           };
 
             CudaClassifiers = new Dictionary<DetectionObject, CudaCascadeClassifier>();
             if (!Config.IsCudaEnabled) return;
-            CudaClassifiers.Add(DetectionObject.Face, new CudaCascadeClassifier(Path + "frontalface_default.xml"));
-            CudaClassifiers.Add(DetectionObject.LeftEye, new CudaCascadeClassifier(Path + "lefteye_2splits.xml"));
-            CudaClassifiers.Add(DetectionObject.RightEye, new CudaCascadeClassifier(Path + "righteye_2splits.xml"));
+            CudaClassifiers.Add(DetectionObject.Face,
+                                new CudaCascadeClassifier(Path + @"CUDA\haarcascade_frontalface_default.xml"));
+            CudaClassifiers.Add(DetectionObject.LeftEye,
+                                new CudaCascadeClassifier(Path + @"CUDA\haarcascade_lefteye_2splits.xml"));
+            CudaClassifiers.Add(DetectionObject.RightEye,
+                                new CudaCascadeClassifier(Path + @"CUDA\haarcascade_righteye_2splits.xml"));
         }
 
         public static Rectangle Detect(IOutputArrayOfArrays grayImage, DetectionObject detectionObject)
@@ -64,9 +77,9 @@ namespace RedEye
         {
             if (grayImage == null) throw new ArgumentNullException(nameof(grayImage));
 
-            using GpuMat mat = new GpuMat();
-            CudaClassifiers[detectionObject].DetectMultiScale(grayImage, mat);
-            var rectangles = CudaClassifiers[detectionObject].Convert(mat);
+            using CudaImage<Gray, byte> img = new CudaImage<Gray, byte>();
+            CudaClassifiers[detectionObject].DetectMultiScale(grayImage, img);
+            var rectangles = CudaClassifiers[detectionObject].Convert(img);
 
             if (rectangles.Length == 0) return Rectangle.Empty;
             if (!Config.GetBool("PickAverage")) return rectangles.OrderBy(r => r.Width).First();
