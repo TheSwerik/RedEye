@@ -162,11 +162,7 @@ namespace RedEye
             NextButtonRow.Height = GridLength.Auto;
         }
 
-        private void DetectAsync()
-        {
-            if (!Config.IsCudaEnabled) DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
-            else DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>());
-        }
+        private void DetectAsync() { DrawDetection(new Mat(_images.CurrentImagePath()).ToImage<Gray, byte>()); }
 
         private void SavePNG()
         {
