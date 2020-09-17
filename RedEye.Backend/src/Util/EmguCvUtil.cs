@@ -8,7 +8,6 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using Emgu.Util;
-using Emgu.Util.TypeEnum;
 
 namespace RedEye.Util
 {
@@ -52,8 +51,8 @@ namespace RedEye.Util
                 // See https://bugzilla.novell.com/show_bug.cgi?id=363431
 
                 if (
-                        Platform.OperationSystem == OS.Windows &&
-                        Platform.ClrType == ClrType.DotNet &&
+                        Platform.OperationSystem == Platform.OS.Windows &&
+                        Platform.ClrType == Platform.Clr.DotNet &&
                         srcColorType == typeof(Bgr) && srcDepthType == typeof(byte)
                         && (step & 3) == 0)
                     //Bgr byte    
@@ -184,7 +183,6 @@ namespace RedEye.Util
                                    CvInvoke.GetDepthType(mat.Depth), true);
         }
 
-
         /// <summary>
         ///     Convert the umat into Bitmap, the pixel values are copied over to the Bitmap
         /// </summary>
@@ -212,8 +210,8 @@ namespace RedEye.Util
         ///     Create an Image &lt; TColor, TDepth &gt; from Bitmap
         /// </summary>
         public static Image<TColor, TDepth> ToImage<TColor, TDepth>(this Bitmap bitmap) where
-                                                                                        TColor : struct, IColor
-                                                                                        where TDepth : new()
+            TColor : struct, IColor
+            where TDepth : new()
         {
             var size = bitmap.Size;
             var image = new Image<TColor, TDepth>(size);
@@ -408,17 +406,16 @@ namespace RedEye.Util
             return image;
         }
 
-
         /// <summary>
         ///     Utility function for converting Bitmap to Image
         /// </summary>
         /// <param name="bmp">the bitmap to copy data from</param>
         /// <param name="image">The image to copy data to</param>
         private static void CopyFromBitmap<TColor, TDepth>(this Image<TColor, TDepth> image, Bitmap bmp) where
-                                                                                                         TColor : struct
-                                                                                                         , IColor
-                                                                                                         where TDepth :
-                                                                                                         new()
+            TColor : struct
+            , IColor
+            where TDepth :
+            new()
         {
             var data = bmp.LockBits(
                 new Rectangle(Point.Empty, bmp.Size),
@@ -450,8 +447,8 @@ namespace RedEye.Util
         ///     Image&lt;Bgra, Byte&gt;, the image data is shared between the Bitmap and the Image object.
         /// </returns>
         public static Bitmap AsBitmap<TColor, TDepth>(this Image<TColor, TDepth> image) where
-                                                                                        TColor : struct, IColor
-                                                                                        where TDepth : new()
+            TColor : struct, IColor
+            where TDepth : new()
         {
             IntPtr scan0;
             int step;
@@ -470,8 +467,8 @@ namespace RedEye.Util
         /// </remarks>
         /// <returns> This image in Bitmap format, the pixel data are copied over to the Bitmap</returns>
         public static Bitmap ToBitmap<TColor, TDepth>(this Image<TColor, TDepth> image) where
-                                                                                        TColor : struct, IColor
-                                                                                        where TDepth : new()
+            TColor : struct, IColor
+            where TDepth : new()
         {
             var typeOfColor = typeof(TColor);
             var typeofDepth = typeof(TDepth);
@@ -524,12 +521,12 @@ namespace RedEye.Util
         /// <param name="height"> The height of the bitmap</param>
         /// <returns> This image in Bitmap format of the specific size</returns>
         public static Bitmap ToBitmap<TColor, TDepth>(this Image<TColor, TDepth> image, int width, int height) where
-                                                                                                               TColor :
-                                                                                                               struct,
-                                                                                                               IColor
-                                                                                                               where
-                                                                                                               TDepth :
-                                                                                                               new()
+            TColor :
+            struct,
+            IColor
+            where
+            TDepth :
+            new()
         {
             using (var scaledImage = image.Resize(width, height, Inter.Linear))
             {
@@ -537,13 +534,12 @@ namespace RedEye.Util
             }
         }
 
-
         /// <summary>
         ///     Convert the CudaImage to its equivalent Bitmap representation
         /// </summary>
         public static Bitmap ToBitmap<TColor, TDepth>(this CudaImage<TColor, TDepth> cudaImage) where
-                                                                                                TColor : struct, IColor
-                                                                                                where TDepth : new()
+            TColor : struct, IColor
+            where TDepth : new()
         {
             if (typeof(TColor) == typeof(Bgr) && typeof(TDepth) == typeof(byte))
             {
