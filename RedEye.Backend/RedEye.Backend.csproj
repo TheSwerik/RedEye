@@ -12,8 +12,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.2.0.3662"/>
-        <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.3.20214.6"/>
+        <PackageReference Include="Emgu.CV.runtime.windows.cuda" Version="4.4.0.4061"/>
+        <PackageReference Include="System.Drawing.Common" Version="5.0.0-preview.8.20407.11"/>
     </ItemGroup>
 
 </Project>
